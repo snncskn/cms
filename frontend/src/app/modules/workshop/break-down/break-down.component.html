@@ -1,0 +1,94 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="form" class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-danger card-header-icon">
+                            <h4 class="card-title">Workshop Report</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="toolbar">
+                            </div>
+                            <div class="material-datatables">
+                                <!--
+                                <table mat-table [dataSource]="dataSource" matSort>
+                                    <ng-container matColumnDef="fleetNo">
+                                        <th mat-header-cell *matHeaderCellDef> Fleet Number </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.fleetNo}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="vehicleTypeDesc">
+                                        <th mat-header-cell *matHeaderCellDef> Machine Type </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.vehicleType?.name}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="currentMachineHours">
+                                        <th mat-header-cell *matHeaderCellDef> CurrentMachineHours </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.currentMachineHours}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="serviceIntervalHours">
+                                        <th mat-header-cell *matHeaderCellDef> ServiceIntervalHours </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.serviceIntervalHours}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="lastServiceDay">
+                                        <th mat-header-cell *matHeaderCellDef> LastServiceDay </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.lastServiceDay}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="lastServiceHours">
+                                        <th mat-header-cell *matHeaderCellDef> Last ServiceHours </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.lastServiceHours}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="btn">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            <mat-form-field>
+                                                <input matInput placeholder="Search" #txtVal
+                                                    (keydown.enter)="applyFilter(txtVal.value)"
+                                                    formControlName="search">
+                                            </mat-form-field>
+                                            <mat-checkbox placeholder="Usable" (change)="onChange()"
+                                                formControlName="usable">Usable</mat-checkbox>
+
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <a class="btn btn-link btn-info btn-just-icon like"
+                                                (click)="onView(element.uuid)"><i
+                                                    class="material-icons">work_outline</i></a>
+
+                                            <a class="btn btn-link btn-info btn-just-icon like"
+                                                (click)="onEdit(element.uuid)"><i class="material-icons">edit</i></a>
+                                            <a class="btn btn-link btn-danger btn-just-icon remove"
+                                                (click)="onDelete(element.uuid)"><i class="material-icons">close</i></a>
+
+                                            <button mat-button [matMenuTriggerFor]="menu">Actions</button>
+                                            <mat-menu #menu="matMenu">
+                                                <button mat-menu-item data-toggle="modal"
+                                                    (click)="openBrekDown(element)" data-target="#openBrekDown">Create
+                                                    Servis Request</button>
+                                                <button mat-menu-item>Create Break Down Report</button>
+                                                <button mat-menu-item>Create Disel Requisition</button>
+                                                <button mat-menu-item>Generate Pre Use Inspection</button>
+                                                <button mat-menu-item>Form</button>
+                                                <button mat-menu-item>Delete Machine</button>
+
+
+                                            </mat-menu>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                </table>
+
+                                <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                    [pageSizeOptions]="[ 25,50,100]" (page)="serverdata($event)">
+                                </mat-paginator>
+-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div> 
+</div>

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.idea/
+.history/
+.history
+.DS_Store
+../.DS_Store
+../doc/

@@ -1,0 +1,230 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="vehicleForm" class="form-horizontal">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header card-header-icon card-header-rose">
+                            <div class="card-icon">
+                                <i class="material-icons">perm_identity</i>
+                            </div>
+                            <h4 class="card-title">Vehicle Profile
+                            </h4>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Fleet No" formControlName="fleetNo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Serial No" formControlName="serialNo">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Registration No" formControlName="registrationNo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="VIN No" formControlName="vinNo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder=" Fuel Consuption" formControlName="fuelConsuption">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Pre use Check List" formControlName="preUseCheckList">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-profile">
+                        <div class="card-avatar">
+                        </div>
+                        <div class="card-body">
+                            <img src="{{image.downloadUrl}}" height="250" width="250" onerror="this.onerror=null; this.src='./assets/img/vehicle.jpg'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-header ">
+                        </div>
+                        <div class="card-body ">
+                            <ul class="nav nav-pills nav-pills-warning" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#link1" role="tablist">
+                        Attributes
+                      </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#link2" role="tablist">
+                        Report History
+                      </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content tab-space">
+                                <div class="tab-pane active" id="link1">
+                                    Detail Vehicle Form Attribute
+                                </div>
+                                <div class="tab-pane" id="link2">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="startDate" formControlName="startDate" placeholder="Start Date" (click)="startDate.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="startDate">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #startDate></mat-datepicker>
+
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="startTime">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="endDate" formControlName="endDate" placeholder="End Date" (click)="endDate.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="endDate">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #endDate></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="endTime">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button mat-raised-button type="button" (click)="filterBreakDown()" class="btn btn-rose btn-fill">Search</button>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                        </div>
+                                    </div>
+                                    <mat-table [dataSource]="dataSource" matSort #sortSubs="matSort">
+                                        <ng-container matColumnDef="breakdowndate">
+                                            <mat-header-cell style="max-width: 30%!important; " *matHeaderCellDef>Break Down Report Open Date / Closed Date </mat-header-cell>
+                                            <mat-cell *matCellDef="let row">
+                                                {{row.breakDownStartDate}} <br>
+
+                                                {{row.breakDownEndDate !== null ? row.breakDownEndDate: row.breakDiff}}
+
+                                            </mat-cell>
+                                        </ng-container>
+                                        <ng-container matColumnDef="jobcartdate">
+                                            <mat-header-cell style="max-width: 30%!important; " *matHeaderCellDef>Job Card Open Date/Closed Date </mat-header-cell>
+                                            <mat-cell class="flex-stretch" *matCellDef="let row">
+                                                {{row.jobCardStartDate}} <br>
+                                                {{row.jobCardEndDate !== null ? row.jobCardEndDate: row.jobDiff}}
+
+                                            </mat-cell>
+                                        </ng-container>
+                                        <ng-container matColumnDef="reportNumber">
+                                            <mat-header-cell style="max-width: 30%!important; " *matHeaderCellDef>REPORT NUMBER </mat-header-cell>
+                                            <mat-cell style="max-width: 30%!important; " *matCellDef="let row"> {{row.reportNumber}} </mat-cell>
+                                        </ng-container>
+                                        <ng-container matColumnDef="status">
+                                            <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                                            <mat-cell *matCellDef="let row">
+                                                <i class="material-icons" *ngIf="row.jobCardStatus === 'ACTIVE_BREAKDOWN_REPORT'" style="color:#e91e63">
+                                                    brightness_1
+                                                </i>
+                                                <i class="material-icons" *ngIf="row.jobCardStatus === 'ACTIVE_JOB_CARD'" style="color:green">
+                                                    brightness_1
+                                                </i>
+                                                <i class="material-icons" *ngIf="row.jobCardStatus === 'CLOSED_JOB_CARD'" style="color:gray">
+                                                    brightness_1
+                                                </i>
+                                                {{row.jobCardStatusText}}
+                                            </mat-cell>
+                                        </ng-container>
+                                        <ng-container matColumnDef="btn">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <mat-form-field>
+                                                    <input matInput placeholder="Search" #txtVal
+                                                           (keydown.enter)="applyFilter(txtVal.value)">
+                                                </mat-form-field>
+
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let element">
+
+                                                <button type="button" mat-button [matMenuTriggerFor]="menu">Functions</button>
+                                                <mat-menu #menu="matMenu">
+                                                    <button type="button" mat-menu-item data-toggle="modal"
+                                                            (click)="viewOpenBrekDown(element,'BREAKDOWN')"
+                                                            *ngIf="element.jobCardStatus === 'ACTIVE_BREAKDOWN_REPORT'"
+                                                            data-target="#viewBrekDown">Genarate Job Card</button>
+                                                    <button type="button" mat-menu-item data-toggle="modal"
+                                                            *ngIf="element.jobCardStatus === 'ACTIVE_JOB_CARD'"
+                                                            (click)="viewOpenBrekDown(element,'JOB')"
+                                                            data-target="#openBrekDown">Viev Job Card</button>
+                                                    <button type="button" mat-menu-item data-toggle="modal"
+                                                            (click)="openBrekDown(element)"
+                                                            data-target="#openBrekDown">PDF</button>
+                                                </mat-menu>
+                                            </mat-cell >
+                                        </ng-container>
+
+                                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                        <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                    </mat-table>
+                                    <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                                   [pageSizeOptions]="pageSizeOptions" (page)="getServerData($event)">
+                                    </mat-paginator>
+
+                                </div>
+                                <div class="tab-pane" id="link3">
+
+                                </div>
+                            </div>
+                        </div>
+                        <mat-table [dataSource]="dataSource" matSort #sortSubs="matSort">
+                            <ng-container matColumnDef="createdAt">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Date </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.createdAt}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                              <mat-header-cell style="max-width: 60%!important; " *matHeaderCellDef>Description </mat-header-cell>
+                              <mat-cell style="max-width: 60%!important; " *matCellDef="let row"> {{row.description}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="creator">
+                              <mat-header-cell style="max-width: 20%!important; " *matHeaderCellDef>User </mat-header-cell>
+                              <mat-cell style="max-width: 20%!important; " *matCellDef="let row"> {{row.createdBy}} </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                          </mat-table>
+                          <mat-paginator [length]="totalElementDesc"  [pageSizeOptions]="pageSizeOptions"
+                          ></mat-paginator>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

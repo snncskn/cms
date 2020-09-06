@@ -1,0 +1,381 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <form [formGroup]="form" class="form-horizontal">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h4>Request List</h4>
+              <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="requestStartDate" formControlName="requestStartDate"
+                      placeholder="Start Date" (click)="requestStartDate.open()">
+                    <mat-datepicker-toggle matSuffix [for]="requestStartDate"></mat-datepicker-toggle>
+                    <mat-datepicker #requestStartDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                  <mat-form-field class="example-full-width">
+                    <input matInput type="time" formControlName="requestStartTime">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="requestCloseDate" formControlName="requestCloseDate"
+                      placeholder="Close Date" (click)="requestCloseDate.open()">
+                    <mat-datepicker-toggle matSuffix [for]="requestCloseDate"></mat-datepicker-toggle>
+                    <mat-datepicker #requestCloseDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                  <mat-form-field class="example-full-width">
+                    <input matInput type="time" formControlName="requestCloseTime">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                  <button mat-raised-button type="button" (click)= "applyFilter()" class="btn btn-rose btn-fill">Search Report</button>
+                </div>
+                <div class="col-sm-2">
+                   <!-- <button mat-raised-button type="button" (click)="exportExcel()"
+                    class="btn btn-rose btn-fill">
+                    <mat-icon>save_alt</mat-icon>Export XLS</button>
+                    -->
+                </div>
+
+              </div>
+              <div class="row">
+                  <div class="col-md-12"> 
+                          <mat-table [dataSource]="dataSource" matSort #sortSubs="matSort">
+                            <ng-container matColumnDef="jobCardNum">
+                              <mat-header-cell *matHeaderCellDef>
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Job Card Num"
+                                            (keydown.enter)="applyFilter()"
+                                            formControlName="jobCardNumber">
+                                    </mat-form-field>
+                                  </div>
+                              </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.reportNumber}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="fleetNum">
+                              <mat-header-cell  *matHeaderCellDef>
+                                  <div class="col-sm-12">
+                                      <mat-form-field>
+                                          <input matInput placeholder="Fleet Number"
+                                              (keydown.enter)="applyFilter()"
+                                              formControlName="fleetNumber">
+                                      </mat-form-field>
+                                    </div>
+                                </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.fleetNumber}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="requestDate">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Request Date</mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.requestDate}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="deliveryTime">
+                              <mat-header-cell *matHeaderCellDef>Delivery <br/> Date & Time
+                              </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.deliveredDate}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="partNumber">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                                  <div class="col-sm-11">
+                                      <mat-form-field>
+                                          <input matInput placeholder="Part Number"
+                                              (keydown.enter)="applyFilter()"
+                                              formControlName="stockCode">
+                                      </mat-form-field>
+                                    </div>
+                                </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.stockCode}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="desc">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                                  <div class="col-sm-11">
+                                      <mat-form-field>
+                                          <input matInput placeholder="Desc"
+                                              (keydown.enter)="applyFilter()"
+                                              formControlName="itemDescription">
+                                      </mat-form-field>
+                                    </div>
+                                </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> 
+                                <div class="{less: hidden}">
+                                    {{row.description}}
+                                </div>
+                                
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                                  <div class="col-sm-11">
+                                      <mat-form-field>
+                                          <input matInput placeholder="Status"
+                                              (keydown.enter)="applyFilter()"
+                                              formControlName="status">
+                                      </mat-form-field>
+                                    </div>
+                                </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> 
+                                  <i class="material-icons" *ngIf="row.jobCardItemStatus === 'Requested'" style="color:red">
+                                      brightness_1
+                                      </i>
+                              <i class="material-icons" *ngIf="row.jobCardItemStatus === 'Partial'" style="color:orange">
+                                      brightness_1
+                                      </i>
+                              <i class="material-icons" *ngIf="row.jobCardItemStatus === 'Delivered'" style="color:green">
+                                      brightness_1
+                                      </i>
+                              {{row.jobCardItemStatus}}
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="availableQty">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Approve Qty
+                              </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> 
+                                  {{row.approveQuantity}}
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="requestedQty">
+                              <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Request Qty</mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.requestedQuantity}}
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="requestedUser">
+                              <mat-header-cell  *matHeaderCellDef>
+                                  <div class="col-sm-11">
+                                      <mat-form-field>
+                                          <input matInput placeholder="Requested User"
+                                              (keydown.enter)="applyFilter()"
+                                              formControlName="requestUser">
+                                      </mat-form-field>
+                                    </div>
+                                
+                                
+                                
+                              </mat-header-cell>
+                              <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.requestUser}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="btn">
+                              <mat-header-cell *matHeaderCellDef>
+                                <mat-header-cell *matHeaderCellDef>
+                                  <mat-icon (click)="applyFilter(true)" style="cursor: pointer;"
+                                      title="Export as XLS">save_alt</mat-icon>
+                              </mat-header-cell>
+                              <mat-icon (click)="applyFilter(true)" style="cursor: pointer;"
+                              title="Export as XLS">save_alt</mat-icon>
+                              </mat-header-cell>
+                              <mat-cell *matCellDef="let element">
+                                <button type="button" mat-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>Functions</button>
+                                <mat-menu #menu="matMenu">
+                                  <button type="button" mat-menu-item data-toggle="modal" 
+                                  *ngIf="element.jobCardItemStatus != 'Delivered'" (click)="viewDeliverItem(element)"
+                                    data-target="#deliverItem">Deliver Item</button>
+                                  <button type="button" mat-menu-item data-toggle="modal" (click)="deliverDetail(element)"
+                                    data-target="#deliverDetail">Show Deliver Detail</button>
+                                  <button type="button" mat-menu-item data-toggle="modal" (click)="showJobCard(element)"
+                                   data-target="#deliverDetail">View Job Card</button>
+                                </mat-menu>
+                              </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row [class]="setStyle(i)" matRipple class="element-row" *matRowDef="let i = index;let row; columns: displayedColumns;"></mat-row>
+                          </mat-table>
+                          <mat-paginator [length]="totalElement" [pageSize]="pageSize" [pageSizeOptions]="[5,10,15, 20, 100, 150]"
+                            (page)="serverDataDesc($event)">
+                          </mat-paginator>
+                        
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+   
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="deliverItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <form [formGroup]="requestfrm">
+    <div class="modal-dialog">
+      <div class="modal-content order-model">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Deliver Item</h5>
+          <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field>
+            <input matInput placeholder="Stock Code" formControlName="stockCode">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field>
+            <input matInput placeholder="Barcode Code" formControlName="barcode">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <input matInput placeholder="Description" formControlName="description">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field>
+            <input matInput placeholder="Requested Quantity" formControlName="requestedQuantity">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+            <mat-form-field>
+              <input matInput placeholder="Delivered Quantity" formControlName="deliveredQuantity">
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3">
+              <mat-form-field>
+                <input matInput placeholder="Available Quantity" formControlName="availableQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3">
+                <mat-form-field>
+                  <input matInput placeholder="Remaining Quantity" formControlName="remainingQuantity">
+                </mat-form-field>
+              </div>
+            <div class="col-sm-12">
+          <mat-form-field class="example-full-width">
+            <input type="number" matInput placeholder="Deliver Quantity" min="1" formControlName="deliverQuantity">
+            <mat-error *ngIf="requestfrm.controls['deliverQuantity'].errors?.max">
+              Deliver Quantity <strong>max</strong>
+            </mat-error>
+            <mat-error *ngIf="requestfrm.controls['deliverQuantity'].errors?.min">
+                Deliver Quantity <strong>min</strong> 1
+              </mat-error>
+          </mat-form-field>
+        </div>
+          <div class="col-sm-12">
+            <mat-form-field class="example-full-width">
+              <input type="text" matInput formControlName="operator" aria-label="State" placeholder="Receiver"
+                [matAutocomplete]="auto" />
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="itemSelected($event.option.value)">
+                <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                <ng-container *ngIf="!isLoading">
+                  <mat-option *ngFor="let item of et_users" [value]="item.uuid">
+                    <span> {{ item.staffNumber }} -{{ item.fullName}}</span>
+                  </mat-option>
+                </ng-container>
+              </mat-autocomplete>
+              <mat-error *ngIf="requestfrm.controls['operator'].errors?.required">
+                Please select operator
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button mat-raised-button class="btn btn-danger" (click)="release()">Release</button>
+          <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal fade" id="deliverDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+
+  <form [formGroup]="deliverfrm">
+    <div class="modal-dialog">
+      <div class="modal-content order-model">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Delivery Details</h5>
+          <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-sm-6">
+              <mat-form-field>
+                <input matInput placeholder="Stock Code" formControlName="stockCode">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field>
+                <input matInput placeholder="Barcode Code" formControlName="barcode">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <input matInput placeholder="Description" formControlName="description">
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Requested Qty" formControlName="requestedQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Delivered Qty" formControlName="deliveredQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Remaining Qty" formControlName="remainingQuantity">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="material-datatables">
+
+          <mat-table [dataSource]="dataSourceDeliveredInfos" matSort #sortSubs="matSort">
+            <ng-container matColumnDef="deliveredDate">
+              <mat-header-cell *matHeaderCellDef>Delivery Date
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.deliveredDate}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="deliveredUserInfo">
+              <mat-header-cell *matHeaderCellDef>Delivered By</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.deliveredUserInfo?.fullName}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="receivedUserInfo">
+              <mat-header-cell *matHeaderCellDef>Recived By
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.receivedUserInfo?.fullName}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="deliveredQuantity">
+              <mat-header-cell *matHeaderCellDef>Delivered Quantity
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.deliveredQuantity}} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsDelivered"></mat-header-row>
+            <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumnsDelivered;"></mat-row>
+          </mat-table>
+          <mat-paginator [length]="totalElementDeliver" [pageSize]="pageSizeDeliver"
+              [pageSizeOptions]="[5]" (page)="serverDataDeliver($event)">
+          </mat-paginator>
+
+        </div>
+
+        <div class="modal-footer">
+          <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>

@@ -1,0 +1,25 @@
+ 
+.ACTIVE_BREAKDOWN_REPORT {
+  background: linear-gradient(60deg, #eb5c00, #eb5c50)!important;
+  opacity: 0.8;
+}
+.ACTIVE_JOB_CARD {
+  background: linear-gradient(60deg, #9a600a, #ff9800)!important;
+  opacity: 0.8;
+
+}
+.CLOSED_JOB_CARD {
+  background: linear-gradient(60deg, #0973bb, #f7f2ec)!important;
+  opacity: 0.8;
+
+}
+.CLOSED_JOB_CARD {
+  background: linear-gradient(60deg, #4b4d4e, #ceccc9)!important;
+  opacity: 0.8;
+
+
+}
+
+.zebra {
+  background-color: rgba(0, 0, 0, 0.05)!important;
+}

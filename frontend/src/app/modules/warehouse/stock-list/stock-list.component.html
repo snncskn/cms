@@ -1,0 +1,140 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <form [formGroup]="form" class="form-horizontal">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                  Stock Movements
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-2"></div>
+                  <div class="col-sm-2">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="requestStartDate" formControlName="requestStartDate"
+                        placeholder="Report Start Date" (click)="requestStartDate.open()">
+                      <mat-datepicker-toggle matSuffix [for]="requestStartDate"></mat-datepicker-toggle>
+                      <mat-datepicker #requestStartDate></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-2">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="time" formControlName="requestStartTime">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-2">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="requestCloseDate" formControlName="requestCloseDate"
+                        placeholder="Report End Date" (click)="requestCloseDate.open()">
+                      <mat-datepicker-toggle matSuffix [for]="requestCloseDate"></mat-datepicker-toggle>
+                      <mat-datepicker #requestCloseDate></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-2">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="time" formControlName="requestCloseTime">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-2">
+                    <button mat-raised-button type="button" (click)="applyFilter()" class="btn btn-rose btn-fill">Search Report</button>
+                  </div>
+                  <div class="col-sm-3"></div>
+  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-danger card-header-icon">
+              </div>
+              <div class="card-body"> 
+                <div class="material-datatables">
+                    <table mat-table [dataSource]="dataSource" matSort #sortSubs="matSort">
+                    <ng-container matColumnDef="createdDate">
+                      <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Date</mat-header-cell>
+                      <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.createdDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="stockCode">
+                      <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                          <div class="col-sm-11">
+                              <mat-form-field>
+                                  <input matInput placeholder="Stock Code"
+                                      (keydown.enter)="applyFilter()"
+                                      formControlName="stockCode">
+                              </mat-form-field>
+                          </div>
+                          </mat-header-cell>
+                      <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.stockCode}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="itemDescription">
+                      <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                          <div class="col-sm-11">
+                              <mat-form-field>
+                                  <input matInput placeholder="Description"
+                                      (keydown.enter)="applyFilter()"
+                                      formControlName="itemDescription">
+                              </mat-form-field>
+                          </div>
+                        </mat-header-cell>
+                      <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.itemDescription}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="siteName">
+                      <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                          <div class="col-sm-11">
+                              <mat-form-field>
+                                  <input matInput placeholder="Site"
+                                      (keydown.enter)="applyFilter()"
+                                      formControlName="siteName">
+                              </mat-form-field>
+                          </div>
+                      </mat-header-cell>
+                      <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.siteName}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="moveType">
+                      <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Move Source </mat-header-cell>
+                      <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.moveType}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                      <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Quantity</mat-header-cell>
+                      <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.quantity}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="moveNumber">
+                        <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>
+                            <div class="col-sm-11">
+                                <mat-form-field>
+                                    <input matInput placeholder="Move Number"
+                                        (keydown.enter)="applyFilter()"
+                                        formControlName="moveNumber">
+                                </mat-form-field>
+                            </div>
+                          </mat-header-cell>
+                        <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.moveNumber}} </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="excel">
+                        <mat-header-cell *matHeaderCellDef>
+                            <mat-icon (click)="applyFilter(true)" style="cursor: pointer;"
+                                title="Export as XLS">save_alt</mat-icon>
+                        </mat-header-cell >
+                        <mat-cell *matCellDef="let element"></mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row matRipple [class]="setStyle(i)"  *matRowDef="let i = index; let row; columns: displayedColumns;"></mat-row>
+                  </table>
+                  <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                          [pageSizeOptions]="[10,25,50,100]">
+                      </mat-paginator>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div> 

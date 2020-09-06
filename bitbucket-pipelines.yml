@@ -1,0 +1,91 @@
+options:
+  max-time: 10 # configure default 10 minute timeout
+
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: Backend Integration Testing
+          image: maven:3.6.0-jdk-11
+          caches:
+            - maven
+          script:
+            - cd backend
+            - mvn -B -DskipTests package
+      - step:
+          name: Frontend Integration Testing
+          image: node:10
+          caches:
+            - node
+          script:
+            - cd frontend
+            - npm install
+            - export PATH="$PATH:node_modules/.bin"
+            - ng build --configuration=dev
+            - ls -al
+  branches:
+    '{master}':
+      - parallel:
+        - step:
+            caches:
+              - maven
+            name: Backend Integration Testing
+            image: maven:3.6.0-jdk-11
+            script:
+              - cd backend
+              - mvn -B -DskipTests package
+            artifacts:
+              - backend/target/cms-backend.jar
+        - step:
+            name: Frontend Integration Testing
+            image: node:10
+            caches:
+              - node
+            script:
+              - cd frontend
+              - npm install
+              - export PATH="$PATH:node_modules/.bin"
+              - ng lint
+              - ng build --prod
+              - ng build --configuration=dev
+              - ls -al
+            artifacts:
+              - frontend/dist/**
+      - step:
+          name: Deployment
+          image: alpine
+          script:
+            - apk add git openssh-client
+            - sh -e pipeline/dev-deploy.sh
+    '{prod}':
+      - parallel:
+        - step:
+            caches:
+              - maven
+            name: Backend Integration Testing
+            image: maven:3.6.0-jdk-11
+            script:
+              - cd backend
+              - mvn -B -DskipTests package
+            artifacts:
+              - backend/target/cms-backend.jar
+        - step:
+            name: Frontend Integration Testing
+            image: node:10
+            caches:
+              - node
+            script:
+              - cd frontend
+              - npm install
+              - export PATH="$PATH:node_modules/.bin"
+              - ng lint
+              - ng build --prod
+              - ls -al
+            artifacts:
+              - frontend/dist/**
+      - step:
+          name: Deployment
+          image: alpine
+          script:
+            - apk add git openssh-client
+            - sh -e pipeline/prod-deploy.sh

@@ -1,0 +1,699 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="form" class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-tabs card-header {{statusStyle}}">
+                            <div class="nav-tabs-navigation">
+                                <div class="nav-tabs-wrapper">
+                                    <ul class="nav nav-tabs" data-tabs="tabs">
+                                        <li class="nav-item" (click)="onAdd()">
+                                            <a class="nav-link" style="cursor: pointer!important;">
+                                                <i class="material-icons">playlist_add</i> New Transfer
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#request" (click)="filter('REQUEST')"
+                                                data-toggle="tab">
+                                                <i class="material-icons">touch_app</i> Request ({{requestSize}})
+
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#transfer" (click)="filter('TRANSFER')"
+                                                data-toggle="tab">
+                                                <i class="material-icons">swap_horizontal_circle</i> Transfer
+                                                ({{transferSize}})
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#deliver" (click)="filter('DELIVER')"
+                                                data-toggle="tab">
+                                                <i class="material-icons">input</i> Deliver ({{deliverSize}})
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#rejected" (click)="filter('REJECTED')"
+                                                data-toggle="tab">
+                                                <i class="material-icons">remove_shopping_cart</i> Rejected
+                                                ({{rejectedSize}})
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane" id="partial">
+                                    <div class="material-datatables">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [matDatepicker]="partialDateStart"
+                                                        formControlName="partialDateStart" placeholder="Start Date"
+                                                        (click)="partialDateStart.open()">
+                                                    <mat-datepicker-toggle matSuffix [for]="partialDateStart">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #partialDateStart></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput type="time" formControlName="partialTimeStart">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [matDatepicker]="partialDateEnd"
+                                                        formControlName="partialDateEnd" placeholder="End Date"
+                                                        (click)="partialDateEnd.open()">
+                                                    <mat-datepicker-toggle matSuffix [for]="partialDateEnd">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #partialDateEnd></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput type="time" formControlName="partialTimeEnd">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <button mat-raised-button type="button" (click)="filter('PARTIAL')"
+                                                    class="btn btn-rose btn-fill">Search</button>
+                                            </div>
+                                            <div class="col-sm-2">
+
+                                            </div>
+                                        </div>
+                                        <table mat-table [dataSource]="dataSourcePartial" matSort>
+                                            <ng-container matColumnDef="transferNumber">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Transfer Number"
+                                                                (keydown)="filter('PARTIAL')"
+                                                                formControlName="transferNumber">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferNumber}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceSite">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Source Site"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="sourceSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceSite.description}} </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="targetSite">
+                                                <mat-header-cell *matHeaderCellDef>  <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Target Site"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="targetSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.targetSite.description}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceOwner">
+                                                <mat-header-cell *matHeaderCellDef> User Info
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceOwner.firstName}} {{element.sourceOwner.lastName}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="transferDate">
+                                                <mat-header-cell *matHeaderCellDef> Transfer Request Time </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferDate | date : "MM.dd.y" }}</mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.status}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="btn" class="">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                    <mat-icon (click)="filter('REQUEST',true)" style="cursor: pointer;"
+                                                    title="Export as XLS">save_alt</mat-icon>
+
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    <a class="btn btn-link btn-info btn-just-icon like"
+                                                        (click)="onEdit(element.uuid)"><i
+                                                            class="material-icons">edit</i></a>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row [class]="setStyle(i)"
+                                                *matRowDef="let i= index; let row; columns: displayedColumns;">
+                                            </mat-row>
+                                        </table>
+                                        <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                            [pageSizeOptions]="[ 25,50, 100,150]" (page)="serverdata($event)">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <div class="tab-pane active" id="request">
+                                    <div class="material-datatables">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [matDatepicker]="orderCreationDateStart"
+                                                        formControlName="orderCreationDateStart"
+                                                        placeholder="Start Date"
+                                                        (click)="orderCreationDateStart.open()">
+                                                    <mat-datepicker-toggle matSuffix [for]="orderCreationDateStart">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #orderCreationDateStart></mat-datepicker>
+
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput type="time"
+                                                        formControlName="orderCreationTimeStart">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [matDatepicker]="orderCreationDateEnd"
+                                                        formControlName="orderCreationDateEnd" placeholder="End Date"
+                                                        (click)="orderCreationDateEnd.open()">
+                                                    <mat-datepicker-toggle matSuffix [for]="orderCreationDateEnd">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #orderCreationDateEnd></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput type="time" formControlName="orderCreationTimeEnd">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button mat-raised-button type="button" (click)="filter('REQUEST')"
+                                                    class="btn btn-rose btn-fill">Search</button>
+                                            </div>
+                                            <div class="col-sm-3">
+
+                                            </div>
+                                        </div>
+                                        <table mat-table [dataSource]="dataSourceRequest" matSort>
+                                            <ng-container matColumnDef="transferNumber">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Transfer Number"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="transferNumber">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell nowrap *matCellDef="let element">
+                                                    {{element.transferNumber}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceSite">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Source Site"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="sourceSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceSite.description}} </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="targetSite">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Target Site"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="targetSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.targetSite.description}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceOwner">
+                                                <mat-header-cell *matHeaderCellDef>  Quantity
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceOwner.firstName}} {{element.sourceOwner.lastName}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="transferDate">
+                                                <mat-header-cell *matHeaderCellDef> Transfer Date & Time </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferDate | date : "MM.dd.y" }}</mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.status}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="btn" class="">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                    <mat-icon (click)="filter('REQUEST',true)" style="cursor: pointer;"
+                                                    title="Export as XLS">save_alt</mat-icon>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    <a class="btn btn-link btn-info btn-just-icon like"
+                                                        (click)="onEdit(element.uuid)"><i
+                                                            class="material-icons">edit</i></a>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row [class]="setStyle(i)"
+                                                *matRowDef="let i = index; let row; columns: displayedColumns;">
+                                            </mat-row>
+                                        </table>
+                                        <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                            [pageSizeOptions]="[ 25,50, 100,150]" (page)="serverdata($event)">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="transfer">
+                                    <div class="material-datatables">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [matDatepicker]="transferDateStart"
+                                                        formControlName="transferDateStart" placeholder="Start Date"
+                                                        (click)="transferDateStart.open()">
+                                                    <mat-datepicker-toggle matSuffix [for]="transferDateStart">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #transferDateStart></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput type="time" formControlName="transferTimeStart">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [matDatepicker]="transferDateEnd"
+                                                        formControlName="transferDateEnd" placeholder="End Date"
+                                                        (click)="transferDateEnd.open()">
+                                                    <mat-datepicker-toggle matSuffix [for]="transferDateEnd">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #transferDateEnd></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput type="time" formControlName="transferTimeEnd">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button mat-raised-button type="button" (click)="filter('TRANSFER')"
+                                                    class="btn btn-rose btn-fill">Search</button>
+                                            </div>
+                                            <div class="col-sm-3">
+                                            </div>
+                                        </div>
+                                        <table mat-table [dataSource]="dataSourceTransfer" matSort>
+                                            <ng-container matColumnDef="transferNumber">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Transfer Number"
+                                                                (keydown)="filter('TRANSFER')"
+                                                                formControlName="transferNumber">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferNumber}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceSite">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Source Site"
+                                                                (keydown)="filter('TRANSFER')"
+                                                                formControlName="sourceSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceSite.description}} </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="targetSite">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                        <div class="col-sm-12">
+                                                                <mat-form-field>
+                                                                    <input matInput placeholder="Target Site"
+                                                                        (keydown)="filter('TRANSFER')"
+                                                                        formControlName="targetSite">
+                                                                </mat-form-field>
+                                                            </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.targetSite.description}} </mat-cell>
+                                            </ng-container>
+
+
+                                            <ng-container matColumnDef="sourceOwner">
+                                                <mat-header-cell *matHeaderCellDef> User Info
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceOwner.firstName}} {{element.sourceOwner.lastName}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="transferDate">
+                                                <mat-header-cell *matHeaderCellDef> Transfer Date & Time </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferDate | date : "MM.dd.y" }}</mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.status}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="btn" class="">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                    <mat-icon (click)="filter('TRANSFER',true)" style="cursor: pointer;"
+                                                    title="Export as XLS">save_alt</mat-icon>
+
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    <a class="btn btn-link btn-info btn-just-icon like"
+                                                        (click)="onEdit(element.uuid)"><i
+                                                            class="material-icons">edit</i></a>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row [class]="setStyle(i)"
+                                                *matRowDef="let i = index; let row; columns: displayedColumns;">
+                                            </mat-row>
+                                        </table>
+                                        <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                            [pageSizeOptions]="[ 25,50, 100,150]" (page)="serverdata($event)">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="deliver">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="deliverDateStart"
+                                                    formControlName="deliverDateStart" placeholder="Start Date"
+                                                    (click)="deliverDateStart.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="deliverDateStart">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #deliverDateStart></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="deliverTimeStart">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="deliverDateEnd"
+                                                    formControlName="deliverDateEnd" placeholder="End Date"
+                                                    (click)="deliverDateEnd.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="deliverDateEnd">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #deliverDateEnd></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="deliverTimeEnd">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button mat-raised-button type="button" (click)="filter('DELIVER')"
+                                                class="btn btn-rose btn-fill">Search</button>
+                                        </div>
+                                        <div class="col-sm-3">
+                                        </div>
+                                    </div>
+                                    <div class="material-datatables">
+                                        <table mat-table [dataSource]="dataSourceDeliver" matSort>
+                                            <ng-container matColumnDef="transferNumber">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Transfer Number"
+                                                                (keydown)="filter('DELIVER')"
+                                                                formControlName="transferNumber">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferNumber}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceSite">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Source Site"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="sourceSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceSite.description}} </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="targetSite">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                        <div class="col-sm-12">
+                                                                <mat-form-field>
+                                                                    <input matInput placeholder="Target Site"
+                                                                        (keydown)="filter('REQUEST')"
+                                                                        formControlName="targetSite">
+                                                                </mat-form-field>
+                                                            </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.targetSite?.description}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceOwner">
+                                                <mat-header-cell *matHeaderCellDef> User Info
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceOwner.firstName}} {{element.sourceOwner.lastName}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="transferDate">
+                                                <mat-header-cell *matHeaderCellDef> Transfer Date & Time </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferDate | date : "MM.dd.y" }}</mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.status}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="btn" class="">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                    <mat-icon (click)="filter('DELIVER',true)" style="cursor: pointer;"
+                                                    title="Export as XLS">save_alt</mat-icon>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    <a class="btn btn-link btn-info btn-just-icon like"
+                                                        (click)="onEdit(element.uuid)"><i
+                                                            class="material-icons">edit</i></a>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row [class]="setStyle(i)"
+                                                *matRowDef="let i = index;let row; columns: displayedColumns;">
+                                            </mat-row>
+                                        </table>
+                                        <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                            [pageSizeOptions]="[ 25,50, 100,150]" (page)="serverdata($event)">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="rejected">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="rejectedDateStart"
+                                                    formControlName="rejectedDateStart" placeholder="Start Date"
+                                                    (click)="rejectedDateStart.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="rejectedDateStart">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #rejectedDateStart></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="rejectedTimeStart">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="rejectedDateEnd"
+                                                    formControlName="rejectedDateEnd" placeholder="End Date"
+                                                    (click)="rejectedDateEnd.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="rejectedDateEnd">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #rejectedDateEnd></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="rejectedTimeEnd">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button mat-raised-button type="button" (click)="filter('REJECTED')"
+                                                class="btn btn-rose btn-fill">Search</button>
+                                        </div>
+                                        <div class="col-sm-3">
+                                        </div>
+                                    </div>
+                                    <div class="material-datatables">
+                                        <table mat-table [dataSource]="dataSourceRejected" matSort>
+                                            <ng-container matColumnDef="transferNumber">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Transfer Number"
+                                                                (keydown)="filter('REJECTED')"
+                                                                formControlName="transferNumber">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferNumber}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceSite">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Source Site"
+                                                                (keydown)="filter('REQUEST')"
+                                                                formControlName="sourceSite">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceSite.description}} </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="targetSite">
+                                                <mat-header-cell *matHeaderCellDef> 
+                                                        <div class="col-sm-12">
+                                                                <mat-form-field>
+                                                                    <input matInput placeholder="Target Site"
+                                                                        (keydown)="filter('REQUEST')"
+                                                                        formControlName="targetSite">
+                                                                </mat-form-field>
+                                                            </div>
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.targetSite.description}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sourceOwner">
+                                                <mat-header-cell *matHeaderCellDef> User Info
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.sourceOwner.firstName}} {{element.sourceOwner.lastName}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="transferDate">
+                                                <mat-header-cell *matHeaderCellDef> Transfer Date & Time</mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.transferDate | date : "MM.dd.y" }}</mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.status}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="rejectionReason">
+                                                <mat-header-cell *matHeaderCellDef> Rejection Reason </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    {{element.rejectionReason}}
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="btn" class="">
+                                                <mat-header-cell *matHeaderCellDef>
+
+                                                    <mat-icon (click)="filter('REJECTED',true)" style="cursor: pointer;"
+                                                    title="Export as XLS">save_alt</mat-icon>
+
+                                                </mat-header-cell>
+                                                <mat-cell *matCellDef="let element">
+                                                    <a class="btn btn-link btn-info btn-just-icon like"
+                                                        (click)="onEdit(element.uuid)"><i
+                                                            class="material-icons">edit</i></a>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row [class]="setStyle(i)"
+                                                *matRowDef="let i=index;let row; columns: displayedColumns;"></mat-row>
+                                        </table>
+                                        <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                            [pageSizeOptions]="[ 25,50, 100,150]" (page)="serverdata($event)">
+                                        </mat-paginator>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toolbar">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

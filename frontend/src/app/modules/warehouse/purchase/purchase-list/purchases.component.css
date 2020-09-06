@@ -1,0 +1,25 @@
+table {
+    width: 100%;
+}
+ 
+.PURCHASE_REQUEST {
+    background: linear-gradient(60deg, #a73025, #eb5c50)!important;
+}
+.ORDER {
+    background: linear-gradient(60deg, #9a600a, #ff9800)!important;
+}
+.INVOICE {
+    background: linear-gradient(60deg, #0973bb, #f7f2ec)!important;
+}
+.REJECTED {
+    background: linear-gradient(60deg, #4b4d4e, #ceccc9)!important;
+
+}
+
+.zebra {
+    background-color: rgba(0, 0, 0, 0.05)!important;
+}
+.supplier-model {
+    width: 150%!important;
+
+}

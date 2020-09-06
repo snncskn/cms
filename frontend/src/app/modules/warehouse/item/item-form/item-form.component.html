@@ -1,0 +1,367 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="form" class="form-horizontal">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header card-header-rose card-header-icon">
+                            <h4 class="card-title">Enter New Item Information </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput #storePartNumber placeholder="Stock Code"
+                                            formControlName="storePartNumber"  class="up" maxlength="49">
+                                        <app-field-error-display
+                                            [displayError]="form.value?.storePartNumber?.length==49"
+                                            errorMsg="Max 50 characters">
+                                        </app-field-error-display>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <input type="number" matInput placeholder="Min Stock Quantity"
+                                            onKeyPress="if(this.value.length==9) return false;"
+                                            formControlName="minStockQuantity">
+                                        <app-field-error-display
+                                            [displayError]="displayErrorControl('minStockQuantity')"
+                                            errorMsg="Max 10 characters">
+                                        </app-field-error-display>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Unit" formControlName="unit">
+                                            <mat-option *ngFor="let item of propertys" [value]="item.keyValue">
+                                                {{ item.keyLabel }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <textarea matInput placeholder="Description" formControlName="itemDescription"
+                                            maxlength="150"> </textarea>
+                                        <app-field-error-display
+                                            [displayError]="form.value?.itemDescription?.length>149"
+                                            errorMsg="Max 150 characters">
+                                        </app-field-error-display>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Barcode" formControlName="barcode"
+                                            (change)="onBarcodeGenerator()" maxlength="50">
+                                        <app-field-error-display [displayError]="form.value?.barcode === null"  style="font-size:100%!important;"
+                                            errorMsg="If this field is empty, we will generate a barcode for you">
+                                        </app-field-error-display>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!--   <button mat-raised-button (click)="onCarouselShow()" data-toggle="modal"
+                                    data-target="#barcode" class="btn btn-just-icon btn-warning">
+                                    <mat-icon>dehaze</mat-icon>
+                                </button>-->
+
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="modal-body" title="Click for print"
+                                        style="cursor: pointer;text-align: center!important" (click)="printDiv()">
+                                        <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType"
+                                            [bc-value]="bcValue" [bc-format]="format" [bc-line-color]="lineColor"
+                                            [bc-width]="width" [bc-height]="height" [bc-display-value]="displayValue"
+                                            [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
+                                            [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
+                                            [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
+                                            [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
+                                            [bc-margin-left]="0" [bc-margin-right]="marginRight"></ngx-barcode>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="fileinput fileinput-new text-center" style="width: 100%!important;"
+                                    data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail">
+                                        <img src="{{image.downloadUrl}}"
+                                            onerror="this.onerror=null; this.src='./assets/img/placeholder.jpg'"
+                                            height="200px!important">
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail" height="100px!important">
+                                    </div>
+                                    <div>
+                                        <span class="btn btn-file"
+                                            style="text-align: center;background-color: #e91e63;width:50px!important;">
+                                            <span class="fileinput-new" [class.disabled]="operationLock">
+                                                <mat-icon>add</mat-icon>
+                                            </span>
+                                            <span class="fileinput-exists" [class.disabled]="operationLock">
+                                                <mat-icon>add</mat-icon>
+                                            </span>
+                                            <input type="file" name="fileImage" #fileImage
+                                                style="text-align: center!important" (change)="onFileChanged($event)"
+                                                #fileInput [disabled]="operationLock" />
+                                        </span>
+                                        <!--  <a href="#" class="btn btn-danger fileinput-exists"
+                                                [class.disabled]="operationLock" data-dismiss="fileinput"><i
+                                                    class="fa fa-times"></i></a>
+                                            -->
+                                        <button type="button" *ngIf="onCarouselShowButton()" mat-raised-button
+                                            class="btn btn-primary btn-raised btn-round" (click)="onCarouselShow()"
+                                            data-toggle="modal" data-target="#myModal">
+                                            <mat-icon>dehaze</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+
+                    <div class="card">
+                        <mat-tab-group>
+                            <mat-tab label="Item Type">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <mat-form-field>
+                                        <input type="text" matInput formControlName="partType" aria-label="State"
+                                            placeholder="Select Type" [matAutocomplete]="auto" />
+                                            <mat-autocomplete #auto="matAutocomplete"
+                                                (optionSelected)="onTypeChange($event.option.value)">
+                                                <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                                <ng-container *ngIf="!isLoading">
+                                                    <mat-option *ngFor="let item of dataSource.data" [value]="item.uuid">
+                                                        <span> {{ item.name }} </span>
+                                                    </mat-option>
+                                                </ng-container>
+                                            </mat-autocomplete>
+                                                <app-field-error-display
+                                                    [displayError]="form.value?.partTypeUuid === null"
+                                                    errorMsg="Type not selected"></app-field-error-display>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="attributesPanel">
+                                        <div class="col-sm-5"
+                                            *ngFor="let item of types.vehicleTypeAttributes; let i = index">
+                                            <div>
+                                                <mat-form-field>
+                                                    <mat-select [(value)]="item.selectedVehicleAttrUuid"
+                                                        placeholder="{{item.vehicleAttributeName}}">
+                                                        <mat-option *ngFor="let it of item.vehicleAttributeValues"
+                                                            [value]="it.uuid">
+                                                            {{ it.vehicleAttributeValue }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-left">
+                                    <button mat-raised-button class="btn" (click)="onBack()">Back</button>
+                                    <button mat-raised-button type="submit" class="btn btn-rose"
+                                        [disabled]="operationLock" (click)="onSubmit()">Save</button>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Purchase History" *ngIf="itemInfo?.partInfo?.uuid !== null"  [formGroup]="dateFrm" >
+                                <div class="card-body" >
+                                    <div class="row"        >
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field>
+                                                <input matInput disable [matDatepicker]="startDate" formControlName="startDate"
+                                                    placeholder="Start Date" (click)="startDate.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="startDate">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #startDate></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="reportStartTime">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="endDate" formControlName="endDate"
+                                                    placeholder="Close Date" (click)="endDate.open()">
+                                                <mat-datepicker-toggle matSuffix [for]="endDate">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #endDate></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="reportCloseTime">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button mat-raised-button type="submit" class="btn btn-rose btn-fill"
+                                                (click)="purchaseHistory()">Search
+                                                Report</button>
+                                        </div>
+                                        <div class="col-sm-3"></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="material-datatables">
+                                                <mat-table [dataSource]="purchaseHistoryDataSource" matSort #sortSubs="matSort">
+                                                    <ng-container matColumnDef="purchaseDate">
+                                                        <mat-header-cell *matHeaderCellDef>Purchse Date
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row"> {{row.requestDate}} </mat-cell>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="invoiceNummber">
+                                                        <mat-header-cell *matHeaderCellDef>Invoice Number
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row"> {{row.invoiceNumber}}
+                                                        </mat-cell>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="purchaseQuantity">
+                                                        <mat-header-cell *matHeaderCellDef>Purchase Qty
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row"> {{row.quantity}} </mat-cell>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="unitPrice">
+                                                        <mat-header-cell *matHeaderCellDef>Unit Price
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row"> {{row.total}} </mat-cell>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="supplier">
+                                                        <mat-header-cell *matHeaderCellDef>Supplier
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row"> {{row.supplierName}}
+                                                        </mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="displayedColumns">
+                                                    </mat-header-row>
+                                                    <mat-row matRipple class="element-row"
+                                                        *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                                </mat-table>
+                                                <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                                    [pageSizeOptions]="[5,10,15, 20, 100, 150]"
+                                                    (page)="serverDataItem($event)">
+                                                </mat-paginator>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Image List</h4>
+                <button mat-button type="button" class="close" id="myModalClear" data-dismiss="modal"
+                    aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="avatars.length>0">
+                <ngx-hm-carousel [(ngModel)]="currentIndex" [show-num]="1" [autoplay-speed]="speed"
+                    [infinite]="infinite" [drag-many]="true" [aniTime]="200" [data]="avatars" class="carousel c-accent">
+
+                    <section ngx-hm-carousel-container class="content">
+                        <article class="item cursor-pointer" ngx-hm-carousel-item
+                            *ngFor="let avatar of avatars; let i = index" [ngClass]="{'visible': currentIndex===i}">
+                            <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+                                <button mat-raised-button color="accent" (click)="onImageDelete(avatar.uuid)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                                <button mat-raised-button [color]="avatar.selected ? 'warning': 'accent'"
+                                    (click)="onImageDefault(avatar)">
+                                    <mat-icon>beenhere</mat-icon>
+                                </button>
+
+                            </div>
+                        </article>
+                        <ng-template #infiniteContainer></ng-template>
+                    </section>
+                    <ng-template #carouselContent let-avatar let-i="index">
+                        <article class="item cursor-pointer" [ngClass]="{'visible': currentIndex===i}">
+                            <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+
+                            </div>
+                        </article>
+                    </ng-template>
+
+                    <ng-template #carouselPrev>
+                        <div class="click-area">
+                            <i class="material-icons"  style="background-color: black!important">keyboard_arrow_left</i>
+                        </div>
+                    </ng-template>
+                    <ng-template #carouselNext>
+                        <div class="click-area">
+                            <i class="material-icons"  style="background-color: black!important">keyboard_arrow_right</i>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #carouselDot let-model>
+                        <div class="ball bg-accent" [class.visible]="model.index === model.currentIndex">
+                        </div>
+                    </ng-template>
+
+                    <ng-template #carouselProgress let-progress>
+                        <div class="progress"></div>
+
+                    </ng-template>
+
+                </ngx-hm-carousel>
+            </div>
+            <div class="modal-footer">
+                <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                    data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="modal fade" id="barcode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" *ngIf="showBarcode">
+            <div class="modal-content">
+                <div style="text-align: left!important;margin-left: 100px!important;font-size: 8px!important;"
+                    id="printThis">
+                    <div style="text-align: left!important;margin-left: 70px!important;font-size: 8px!important;">
+                        {{form.value.itemDescription?.substr(0,30)}}</div>
+                    <div style="text-align: left!important;margin-left: 70px!important;font-size: 8px!important;">Stock
+                        Code:{{form.value.storePartNumber}}</div>
+                    <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="bcValue"
+                        [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width" [bc-height]="height"
+                        [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font"
+                        [bc-text-align]="textAlign" [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
+                        [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
+                        [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft"
+                        [bc-margin-right]="marginRight"></ngx-barcode>
+
+                </div>
+                <button mat-raised-button (click)="printDiv()">
+                    <mat-icon>print</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,398 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="form" class="form-horizontal">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <h4>Report Create Date</h4>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <mat-form-field>
+                                            <input matInput [matDatepicker]="breakDownStartDate"
+                                                formControlName="breakDownStartDate" placeholder="Break Down Start Date"
+                                                (click)="breakDownStartDate.open()">
+                                            <mat-datepicker-toggle matSuffix [for]="breakDownStartDate">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #breakDownStartDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-2">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="breakDownStartTime">
+                                            </mat-form-field>
+                                        </div>
+
+                                    <div class="col-sm-2">
+
+                                        <mat-form-field>
+
+                                            <input matInput [matDatepicker]="breakDownEndDate"
+                                                formControlName="breakDownEndDate" placeholder="Break Down End Date"
+                                                (click)="breakDownEndDate.open()">
+                                            <mat-datepicker-toggle matSuffix [for]="breakDownEndDate">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #breakDownEndDate></mat-datepicker>
+
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="time" formControlName="breakdownCloseTime">
+                                            </mat-form-field>
+                                        </div>
+
+                                    <div class="col-sm-2">
+                                        <button mat-raised-button type="button" (click)="searchReport()"
+                                            class="btn btn-rose btn-fill">Search Report</button>
+
+                                    </div>
+                                    <div class="col-sm-2">
+                                            
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header card-header-danger card-header-icon">
+                            <h4 class="card-title" style="margin-left: 40%;">WORKSHOP REPORT</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="toolbar">
+                            </div>
+                            <div class="material-datatables">
+                                <mat-table [dataSource]="dataSource" matSort >
+                                    <ng-container matColumnDef="breakDownStartDate">
+                                        <mat-header-cell *matHeaderCellDef >Break Down Dates <br> Opened
+                                            / Closed </mat-header-cell>
+                                        <mat-cell *matCellDef="let row">
+                                                <div class="row">
+                                                        <div class="col-sm-12"  matTooltip="Break Down Start Date">
+                                                                <mat-icon matSuffix >access_time</mat-icon>
+                                                                {{row.breakDownStartDate}}
+                                                        </div>
+                                                        <div class="col-sm-12" matTooltip="Break Down End Date">
+                                                                <mat-icon matSuffix >access_alarms</mat-icon>
+                                                                {{row.breakDownEndDate !== null ? row.breakDownEndDate: row.breakDiff}}
+                                                        
+                                                        </div>
+    
+                                                </div>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="jobCardDate">
+                                        <mat-header-cell *matHeaderCellDef >Job Cart Dates <br> Opened /
+                                            Closed</mat-header-cell>
+                                        <mat-cell class="flex-stretch" *matCellDef="let row">
+                                            {{row.jobCardStartDate}} <br>
+                                            {{row.jobCardEndDate !== null ? row.jobCardEndDate: row.jobDiff}}
+
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="lastUpdateDate">
+                                        <mat-header-cell *matHeaderCellDef 
+                                            style="text-align: center!important;">Last Update Date</mat-header-cell>
+                                        <mat-cell *matCellDef="let row"> {{row.lastUpdateDate}} </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="fleetNumber">
+                                       <mat-header-cell *matHeaderCellDef >
+                                                    <div class="col-sm-11">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Fleet Number"
+                                                                (keydown)="applyFilter()"
+                                                                formControlName="fleetNo">
+                                                        </mat-form-field>
+                                                    </div>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let row">
+
+                                            {{row.fleetNumber}} </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="reportNumber">
+                                        <mat-header-cell *matHeaderCellDef >
+                                                        <div class="col-sm-11">
+                                                            <mat-form-field>
+                                                                <input matInput placeholder="Report Number"
+                                                                    (keydown)="applyFilter()"
+                                                                    formControlName="reportNumber">
+                                                            </mat-form-field>
+                                                        </div>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let row"> {{row.reportNumber}} </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="jobCardStatus">
+                                        <mat-header-cell *matHeaderCellDef >
+                                                <div class="col-sm-11">
+                                                        <mat-form-field>
+                                                            <mat-select (selectionChange)="applyFilter()" placeholder="Status"
+                                                                    [formControl]="statusSelected" multiple >
+                                                                    <mat-option *ngFor="let stt of status" 
+                                                                                [value]="stt">{{stt}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                </div>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let row">
+                                            <i class="material-icons"
+                                                *ngIf="row.jobCardStatus === 'ACTIVE_BREAKDOWN_REPORT'"
+                                                style="color:#e91e63">
+                                                brightness_1
+                                            </i>
+                                            <i class="material-icons" *ngIf="row.jobCardStatus === 'ACTIVE_JOB_CARD'"
+                                                style="color:green">
+                                                brightness_1
+                                            </i>
+                                            <i class="material-icons" *ngIf="row.jobCardStatus === 'CLOSED_JOB_CARD'"
+                                                style="color:gray">
+                                                brightness_1
+                                            </i>
+                                            {{row.jobCardStatusText}}
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="siteName">
+                                        <mat-header-cell *matHeaderCellDef >
+                                                <div class="col-sm-11">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Site"
+                                                                (keydown)="applyFilter()"
+                                                                formControlName="siteName">
+                                                        </mat-form-field>
+                                                </div></mat-header-cell>
+                                        <mat-cell *matCellDef="let row"> {{row.siteName}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="btn">
+                                        <mat-header-cell *matHeaderCellDef>
+                                            
+                                            <mat-icon (click)="applyFilter('X')" style="cursor: pointer;"
+                                                title="Export as XLS">save_alt</mat-icon>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <button type="button" mat-button [matMenuTriggerFor]="menu">
+                                                    <mat-icon>more_vert</mat-icon> Functions</button>
+                                            <mat-menu #menu="matMenu">
+                                                <button type="button" mat-menu-item data-toggle="modal"
+                                                    (click)="viewOpenBrekDown(element,'BREAKDOWN')"
+                                                    *ngIf="element.jobCardStatus === 'ACTIVE_BREAKDOWN_REPORT'"
+                                                    data-target="#viewBrekDown">Genarate Job Card</button>
+                                                <button type="button" mat-menu-item data-toggle="modal"
+                                                    *ngIf="element.jobCardStatus === 'ACTIVE_JOB_CARD'"
+                                                    (click)="viewOpenBrekDown(element,'JOB')"
+                                                    data-target="#openBrekDown">Viev Job Card</button>
+                                                <button type="button" mat-menu-item data-toggle="modal"
+                                                    (click)="openBrekDown(element)"
+                                                    >Job Card</button>
+                                                    <button type="button" mat-menu-item data-toggle="modal"
+                                                    (click)="openBrekDownB(element)"
+                                                     >BreakDown Report</button>
+                                            </mat-menu>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row [class]="setStyle(i)"  *matRowDef="let i= index;let row; columns: displayedColumns;">
+                                    </mat-row>
+                                </mat-table>
+                                <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                    [pageSizeOptions]="pageSizeOptions" (page)="getServerData($event)">
+                                </mat-paginator>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewBrekDown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Genarate Job Card</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form [formGroup]="breakDown">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Fleet No" formControlName="fleetNo" maxlength="20">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Supervisor Name" formControlName="supervisor">
+                            </mat-form-field>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <input matInput formControlName="breakDwonReportNumber"
+                                    placeholder="Break Down Report Number">
+
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <input matInput formControlName="breakDownStartDate" placeholder="Date / Time">
+
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field class="example-full-width">
+                                <input type="text" matInput formControlName="operator" aria-label="State"
+                                    placeholder="Operator" [matAutocomplete]="auto" />
+                                <mat-autocomplete #auto="matAutocomplete"
+                                    (optionSelected)="itemSelected($event.option.value)">
+                                    <!--<mat-option class="is-loading" (click)="newItemDesc()" >New Item Description</mat-option>-->
+                                    <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                    <ng-container *ngIf="!isLoading">
+                                        <mat-option *ngFor="let item of et_users" [value]="item.uuid">
+                                            <span> {{ item.staffNumber }} - {{ item.fullName}}</span>
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="breakDown.controls['operator'].errors?.required">
+                                    Please select operator
+                                </mat-error>
+                            </mat-form-field>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Name" formControlName="userName">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-12">
+                                <mat-form-field class="example-full-width">
+                                <textarea matInput placeholder="Description" rows="4" formControlName="description"
+                                    maxlength="150"> </textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Current KM/Hours" formControlName="currentMachineHours">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-12"  *ngIf="avatars.length>0">
+
+                            <ngx-hm-carousel [show-num]="1" [autoplay-speed]="speed"
+                                [infinite]="infinite" [drag-many]="true" [aniTime]="200" [data]="avatars"
+                                class="carousel c-accent">
+                                <section ngx-hm-carousel-container class="content">
+                                    <article class="item cursor-pointer" ngx-hm-carousel-item
+                                        *ngFor="let avatar of avatars; let i = index"
+                                        [ngClass]="{'visible': currentIndex===i}">
+                                        <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+                                           
+                                        </div>
+                                    </article>
+                                    <ng-template #infiniteContainer></ng-template>
+                                </section>
+                                <ng-template #carouselContent let-avatar let-i="index">
+                                    <article class="item cursor-pointer" [ngClass]="{'visible': currentIndex===i}">
+                                        <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+
+                                        </div>
+                                    </article>
+                                </ng-template>
+                                <ng-template #carouselPrev>
+                                    <div class="click-area">
+                                        <i class="material-icons" style="background-color: black!important">keyboard_arrow_left</i>
+                                    </div>
+                                </ng-template>
+                                <ng-template #carouselNext>
+                                    <div class="click-area">
+                                        <i class="material-icons"  style="background-color: black!important" >keyboard_arrow_right</i>
+                                    </div>
+                                </ng-template>
+                                <ng-template #carouselDot let-model>
+                                    <div class="ball bg-accent" [class.visible]="model.index === model.currentIndex">
+                                    </div>
+                                </ng-template>
+                                <ng-template #carouselProgress let-progress>
+                                    <div class="progress"></div>
+                                </ng-template>
+                            </ngx-hm-carousel>
+                        </div>
+                    </div>
+                    
+                </form>
+                <div class="row" *ngIf="avatars.length>0">
+                        <ngx-hm-carousel [(ngModel)]="currentIndex" [show-num]="1" [autoplay-speed]="speed"
+                            [infinite]="infinite" [drag-many]="true" [aniTime]="200" [data]="avatars"
+                            class="carousel c-accent">
+    
+                            <section ngx-hm-carousel-container class="content">
+                                <article class="item cursor-pointer" ngx-hm-carousel-item
+                                    *ngFor="let avatar of avatars; let i = index" [ngClass]="{'visible': currentIndex===i}">
+                                    <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+                                        
+                                        
+                                    </div>
+                                </article>
+                                <ng-template #infiniteContainer></ng-template>
+                            </section>
+                            <ng-template #carouselContent let-avatar let-i="index">
+                                <article class="item cursor-pointer" [ngClass]="{'visible': currentIndex===i}">
+                                    <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+    
+                                    </div>
+                                </article>
+                            </ng-template>
+    
+                            <ng-template #carouselPrev>
+                                <div class="click-area">
+                                    <i class="material-icons"  style="background-color: black!important">keyboard_arrow_left</i>
+                                </div>
+                            </ng-template>
+                            <ng-template #carouselNext>
+                                <div class="click-area">
+                                    <i class="material-icons" style="background-color: black!important" >keyboard_arrow_right</i>
+                                </div>
+                            </ng-template>
+    
+                            <ng-template #carouselDot let-model>
+                                <div class="ball bg-accent" [class.visible]="model.index === model.currentIndex">
+                                </div>
+                            </ng-template>
+    
+                            <ng-template #carouselProgress let-progress>
+                                <div class="progress"></div>
+    
+                            </ng-template>
+    
+                        </ngx-hm-carousel>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <span class="btn btn-file" style="text-align: center;background-color: #e91e63;width:50px!important;">
+                    <span class="fileinput-new" [class.disabled]="operationLock">
+                        <mat-icon>add</mat-icon>
+                    </span>
+                    <input type="file" capture="camera" #fileImage name="fileImage" style="text-align: center!important"
+                        (change)="onFileChanged($event)" #fileInput [disabled]="operationLock" />
+                </span>
+                <button mat-raised-button type="button" (click)="genarateJobCard()" class="btn btn-danger">
+                    Genarate Job Card</button>
+                <button mat-raised-button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

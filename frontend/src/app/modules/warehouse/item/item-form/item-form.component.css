@@ -1,0 +1,37 @@
+table {
+   width: 100%;
+}
+.crouselImage {
+   height: 350px!important;
+
+}
+.barcodeMessage{
+   font-size:12px!important;
+}
+.error-msg {
+   font-size:100%!important;
+}
+
+@media screen {
+   #printSection {
+       display: none;
+   }
+ }
+ 
+@media print {
+   body * {
+      visibility:hidden;
+   }
+   #printSection, #printSection * {
+      visibility:visible;
+   }
+   #printSection {
+      position:absolute;
+      left:0;
+      top:0;
+   }
+}
+.fileinput .thumbnail{
+   max-width: 150px!important;
+}
+

@@ -1,0 +1,329 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="vehicleForm" class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-danger card-header-icon">
+                            <div class="card-icon" style="cursor: pointer;">
+                                <i class="material-icons" (click)="onAdd()">playlist_add</i>
+                            </div>
+                            <h4 class="card-title">Fleet List</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="toolbar">
+                            </div>
+                            <div class="material-datatables">
+                                <table mat-table [dataSource]="dataSource" matSort>
+                                    <ng-container matColumnDef="fleetNo">
+                                        <mat-header-cell *matHeaderCellDef>
+                                            <div class="col-sm-12">
+                                                <mat-form-field>
+                                                    <input matInput placeholder="Fleet Number"
+                                                    (keydown.enter)="applyFilter()"
+                                                        formControlName="fleetNo">
+                                                </mat-form-field>
+                                            </div>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.fleetNo}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="vehicleTypeDesc">
+                                        <mat-header-cell *matHeaderCellDef> 
+                                                <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Machine Type"
+                                                            (keydown.enter)="applyFilter()"
+                                                                formControlName="name">
+                                                        </mat-form-field>
+                                                    </div>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.vehicleType?.name}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="currentMachineHours">
+                                        <mat-header-cell *matHeaderCellDef> 
+                                                <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Current Machine Hours/Km"
+                                                            (keydown.enter)="applyFilter()"
+                                                                formControlName="currentMachineHours">
+                                                        </mat-form-field>
+                                                    </div>
+                                                     </mat-header-cell >
+                                        <mat-cell *matCellDef="let element"> {{element.currentMachineHours}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="serviceIntervalHours">
+                                        <mat-header-cell *matHeaderCellDef> 
+                                                <div class="col-sm-12">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Service Interval Hours/Km"
+                                                            (keydown.enter)="applyFilter()"
+                                                                formControlName="serviceIntervalHours">
+                                                        </mat-form-field>
+                                                    </div> 
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.serviceIntervalHours}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="lastServiceDate">
+                                        <mat-header-cell *matHeaderCellDef> 
+                                                <div class="col-sm-11">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Last Service Date"
+                                                            (keydown.enter)="applyFilter()"
+                                                                formControlName="lastServiceDate">
+                                                        </mat-form-field>
+                                                    </div>
+                                                     </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.lastServiceDate}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="lastServiceHours">
+                                        <mat-header-cell *matHeaderCellDef> 
+                                                <div class="col-sm-11">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Last Service Hours/Km"
+                                                                 (keydown.enter)="applyFilter()"
+                                                                formControlName="lastServiceHours">
+                                                        </mat-form-field>
+                                                    </div></mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.lastServiceHours}} </mat-cell>
+                                    </ng-container>
+                                     <ng-container matColumnDef="remainingHours">
+                                        <mat-header-cell *matHeaderCellDef> 
+                                                <div class="col-sm-11">
+                                                        <mat-form-field>
+                                                            <input matInput placeholder="Remaining Hours/Km"
+                                                                 (keydown.enter)="applyFilter()"
+                                                                formControlName="remainingHours">
+                                                        </mat-form-field>
+                                                    </div></mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.remainingHours}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="btn">
+                                        <mat-header-cell *matHeaderCellDef>
+                                            <mat-checkbox placeholder="Usable" (change)="applyFilter()"
+                                                formControlName="usable">Usable</mat-checkbox>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <button type="button" mat-button [matMenuTriggerFor]="menu">
+
+                                                <mat-icon>more_vert</mat-icon>Functions
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <!--  <button mat-menu-item (click)="onView(element.uuid)">
+                                                            <mat-icon>work_outline</mat-icon>Card</button>-->
+                                                <button type="button"  mat-menu-item (click)="onEdit(element.uuid)">
+                                                    <mat-icon>edit</mat-icon>Edit
+                                                </button>
+                                                <button type="button"  mat-menu-item (click)="onDelete(element.uuid)">
+                                                    <mat-icon>delete</mat-icon>Delete
+                                                </button>
+
+                                                <button type="button"  mat-menu-item data-toggle="modal" *ngIf="!element.hasTask"
+                                                    (click)="openBrekDown(element,'SERVICE')"
+                                                    data-target="#openBrekDown">
+                                                    <mat-icon>filter_none</mat-icon>Create Service Request
+                                                </button>
+                                                <button type="button"  mat-menu-item data-toggle="modal" *ngIf="!element.hasTask"
+                                                    (click)="openBrekDown(element,'BREAKDOWN')"
+                                                    data-target="#openBrekDown">
+                                                    <mat-icon>directions</mat-icon> Create Break Down Report
+                                                </button>
+                                                <button type="button"  mat-menu-item>
+                                                    <mat-icon>style</mat-icon>Create Diesel Requisition
+                                                </button>
+                                                <button type="button"  mat-menu-item>
+                                                    <mat-icon>style</mat-icon>Generate Pre Inspection
+                                                </button>
+
+
+                                            </mat-menu>
+                                        </mat-cell>
+
+                                    </ng-container>
+                                    <ng-container matColumnDef="excel">
+                                        <mat-header-cell *matHeaderCellDef>
+                                                <button type="button"  mat-raised-button color="primary" (click)="applyFilter('X')">Export as Excel</button>
+                                        </mat-header-cell >
+                                        <mat-cell *matCellDef="let element"></mat-cell>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row [class]="setStyle(i,row)" [@fadeInOut]  *matRowDef="let i= index;let row; columns: displayedColumns;">
+                                    </mat-row>
+                                </table>
+                                <mat-paginator [length]="totalElement" [pageSize]="pageSize"
+                                    [pageSizeOptions]="[5,25,50,100]" (page)="serverdata($event)">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal fade" id="openBrekDown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                {{type === 'SERVICE' ? 'Create Service Request' : 'Create Break Down Report' }}</h5>
+                            <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <i class="material-icons">clear</i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <form [formGroup]="breakDown">
+                                <div class="row">
+                                    <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="Fleet No" formControlName="fleetNo"
+                                                maxlength="20">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                        <mat-form-field>
+                                            <input matInput formControlName="breakDownStartDate"
+                                                placeholder="Date / Time">
+
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                        <mat-form-field class="example-full-width">
+                                            <input type="text" matInput formControlName="operator" aria-label="State"
+                                                placeholder="Operator" [matAutocomplete]="auto" />
+                                            <mat-autocomplete #auto="matAutocomplete"
+                                                (optionSelected)="itemSelected($event.option.value)">
+                                                <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                                <ng-container *ngIf="!isLoading">
+                                                    <mat-option *ngFor="let item of et_users.data" [value]="item.uuid">
+                                                        <span> {{ item.staffNumber }} -{{ item.fullName }}</span>
+                                                    </mat-option>
+                                                </ng-container>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="breakDown.controls['operator'].errors?.required">
+                                                Please select operator
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="User Name" formControlName="userName">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="Current KM/Hours"
+                                                formControlName="currentKmHours">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-10 col-lg-12 ml-auto mr-auto">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput placeholder="Description" rows="4" formControlName="desc"
+                                                maxlength="150"> </textarea>
+                                            <mat-error *ngIf="breakDown.controls['desc'].errors?.required">
+                                                Please enter message
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-10 col-lg-12 ml-auto mr-auto" *ngIf="avatars.length>0">
+
+                                        <ngx-hm-carousel [(ngModel)]="currentIndex" [show-num]="1"
+                                            [autoplay-speed]="speed" [infinite]="infinite" [drag-many]="true"
+                                            [aniTime]="200" [data]="avatars" class="carousel c-accent">
+                                            <section ngx-hm-carousel-container class="content">
+                                                <article class="item cursor-pointer" ngx-hm-carousel-item
+                                                    *ngFor="let avatar of avatars; let i = index"
+                                                    [ngClass]="{'visible': currentIndex===i}">
+                                                    <div class="img"
+                                                        [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+                                                        <button type="button" mat-raised-button color="accent"
+                                                            (click)="onImageDelete(avatar.uuid)">
+                                                            <mat-icon>delete</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </article>
+                                                <ng-template #infiniteContainer></ng-template>
+                                            </section>
+                                            <ng-template #carouselContent let-avatar let-i="index">
+                                                <article class="item cursor-pointer"
+                                                    [ngClass]="{'visible': currentIndex===i}">
+                                                    <div class="img"
+                                                        [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+
+                                                    </div>
+                                                </article>
+                                            </ng-template>
+                                            <ng-template #carouselPrev>
+                                                <div class="click-area">
+                                                    <i class="material-icons"
+                                                        style="background-color: black!important">keyboard_arrow_left</i>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template #carouselNext>
+                                                <div class="click-area">
+                                                    <i class="material-icons"
+                                                        style="background-color: black!important">keyboard_arrow_right</i>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template #carouselDot let-model>
+                                                <div class="ball bg-accent"
+                                                    [class.visible]="model.index === model.currentIndex">
+                                                </div>
+                                            </ng-template>
+                                            <ng-template #carouselProgress let-progress>
+                                                <div class="progress"></div>
+                                            </ng-template>
+                                        </ngx-hm-carousel>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-file"
+                                style="text-align: center;background-color: #e91e63;width:50px!important;">
+                                <span class="fileinput-new" [class.disabled]="operationLock">
+                                    <mat-icon>add</mat-icon>
+                                </span>
+                                <input type="file" capture="camera" #fileImage name="fileImage"
+                                    style="text-align: center!important" (change)="onFileChanged($event)" #fileInput
+                                    [disabled]="operationLock" />
+                            </span> 
+                            <button mat-raised-button type="button"  data-toggle="cameraModal" (click)="capture()" class="btn btn-warning">
+                                    Take Photo</button>
+                                <button mat-raised-button type="button" (click)="onBreakDownSave()" class="btn btn-warning">
+                                Send Request</button>
+                            <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                                data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="cameraModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" *ngIf="cameraDialog">
+                        <webcam [height]="400" [width]="400" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
+                                [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+                                [videoOptions]="videoOptions"
+                                [imageQuality]="1"
+                                (cameraSwitched)="cameraWasSwitched($event)"
+                                (initError)="handleInitError($event)"
+                        ></webcam>
+                    </div>
+                    <div class="modal-footer">
+                        
+                        <button mat-raised-button type="button" (click)="triggerSnapshot()" class="btn btn-warning">
+                                Take Photo</button>
+                         
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+
+
+</div>

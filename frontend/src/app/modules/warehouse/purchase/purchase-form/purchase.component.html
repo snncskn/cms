@@ -1,0 +1,565 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="form" class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header card-header-rose card-header-icon">
+                            <h4 class="card-title">Enter New Purchase Information</h4>
+                            <span class="alert-danger">{{orderStatus.status}} </span>
+                           
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                        <mat-form-field class="example-full-width">
+                                                
+                                                <mat-select placeholder="Site" formControlName="site">
+                                            <mat-option *ngFor="let item of siteDataSource.data" [value]="item.uuid">
+                                                {{ item.description }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-select placeholder="Supplier" formControlName="supplier"
+                                            (selectionChange)="onChangeSupp($event.value)">
+                                            <mat-option *ngFor="let item of supplierDataSource.data"
+                                                [value]="item.uuid">
+                                                {{ item.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Supplier Address*" formControlName="address">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Registration No*"
+                                            formControlName="registerNumber">
+                                    </mat-form-field>
+                                </div> 
+                                <div class="col-sm-12">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="Tax No"
+                                                formControlName="taxNumber">
+                                        </mat-form-field>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+
+                    <div class="card">
+                        <div class="card-footer">
+                            <button mat-raised-button class="btn" (click)="onBack()">Back</button>
+                            <button mat-raised-button class="btn btn-danger" *ngIf="checkPermission('BTN_REJECT','')"
+                                (click)="reject('REJECTED')">Reject</button>
+                            <button mat-raised-button class="btn btn-success" *ngIf="checkPermission('BTN_INVOICE','')"
+                                (click)="approveDialog('INVOICE')">
+                                <mat-icon>check</mat-icon>Approve Purchase Order
+                            </button>
+                            <button mat-raised-button class="btn btn-success" *ngIf="checkPermission('BTN_ORDER','')"
+                                (click)="approveDialog('ORDER')">
+                                <mat-icon>check</mat-icon> Approve Order
+                            </button>
+                            <button mat-raised-button class="btn btn-danger" *ngIf="checkPermission('BTN_PDF','')"
+                                (click)="captureScreen()">
+                                <mat-icon>cloud_download</mat-icon>Pdf
+                            </button>
+                            <button mat-raised-button class="btn btn-rose" [disabled]="operationLock"
+                                *ngIf="checkPermission('BTN_SAVE','')" (click)="onSubmit()">Save
+                                <mat-icon>navigate_next</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Purchase Request Number"
+                                            formControlName="requestNumber">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <input matInput formControlName="requestDate"
+                                            placeholder="Purchase Request Date">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Purchase Order Number"
+                                            formControlName="orderNumber">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <input matInput formControlName="orderCreationDate"
+                                            placeholder="Purchase Order Creation Date">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput  #input  placeholder="Invoice Number" maxlength="50" formControlName="invoiceNumber">
+                                        <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="invoiceDate" formControlName="invoiceDate"
+                                            placeholder="Invoice Date" (click)="invoiceDate.open()">
+                                        <mat-datepicker-toggle matSuffix [for]="invoiceDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #invoiceDate></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6"></div>
+                                <div class="col-sm-6" *ngIf="order.basicUserInfo?.fullName !== null">
+                                    Last Updated:
+                                    {{order.basicUserInfo?.fullName}} - {{order.basicUserInfo?.createDate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <table mat-table [dataSource]="dataSourceOrderItem" matSort formArrayName="controls">
+                                <ng-container matColumnDef="itemUuid">
+                                    <th mat-header-cell *matHeaderCellDef style=" max-width: 15%!important;"> Stock Code / Barcode / Description
+                                    </th>
+                                    <td mat-cell *matCellDef="let element;let index = index"
+                                        style=" max-width: 15%!important;">
+                                        <span class="input-group-text">
+                                            <i style="font-size: 90%;" >{{getControl(index, 'storePartNumber').value}}</i>
+                                            <mat-error *ngIf="getControl(index, 'storePartNumber').hasError('required')">
+                                                Field is <strong>Required</strong>
+                                            </mat-error>
+                                        </span>
+                                        <span class="input-group-text">
+                                            <i style="font-size: 90%;" >{{getControl(index, 'barcode').value}}</i>
+                                        </span>
+                                        <span class="input-group-text">
+                                            <i style="font-size: 90%;" >{{getControl(index, 'description').value}}</i> 
+                                        </span>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+
+                                </ng-container>
+                                <ng-container matColumnDef="quantity">
+                                    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="number" min="0"
+                                                [formControl]="getControl(index, 'quantity')"
+                                                (change)="onCalculator(index)">
+                                            <mat-error *ngIf="getControl(index, 'quantity').hasError('required')">
+                                                Field is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+
+                                </ng-container>
+                                <ng-container matColumnDef="unitPrice">
+                                    <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="text" min="0"
+                                                [(ngModel)]="getControl(index, 'unitPrice').value"
+                                                [formControl]="getControl(index, 'unitPrice')"
+                                                (change)="onCalculator(index)">
+                                            <mat-error *ngIf="getControl(index, 'unitPrice').hasError('required')">
+                                                Field is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="taxPercent">
+                                    <th mat-header-cell *matHeaderCellDef> Tax(%) </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="number" min="0" maxlength="100" maxlength="3"
+                                                [formControl]="getControl(index, 'taxPercent')"
+                                                (change)="onCalculator(index)">
+                                            <mat-error *ngIf="getControl(index, 'taxPercent').hasError('required')">
+                                                Field is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="taxTotal">
+                                    <th mat-header-cell *matHeaderCellDef> Tax Total </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="text" currencyMask
+                                                [options]="{ prefix: 'R ', thousands: ',', decimal: '.' }"
+                                                [formControl]="getControl(index, 'taxTotal')"
+                                                (change)="onCalculator(index)">
+                                            <mat-error *ngIf="getControl(index, 'taxTotal').hasError('required')">
+                                                Field is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="discountPercent">
+                                    <th mat-header-cell *matHeaderCellDef> Discount(%) </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="number" min="0" max="100" maxlength="3"
+                                                [formControl]="getControl(index, 'discountPercent')"
+                                                (change)="onCalculator(index)">
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                </ng-container>
+                                <ng-container matColumnDef="total">
+                                    <th mat-header-cell *matHeaderCellDef> Total Amount </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput currencyMask
+                                                [options]="{ prefix: 'R ', thousands: ',', decimal: '.' }"
+                                                [formControl]="getControl(index, 'total')">
+                                            <mat-error *ngIf="getControl(index, 'total').hasError('required')">
+                                                Field is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef nowrap> Total
+                                        Tax:{{getTotalTax() | currency : "R"}}
+                                        <br />Total: {{getTotal() | currency : "R"}}
+                                        <br />Grand Total:{{getGrandTotal() | currency : "R"}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="approveQuantity">
+                                    <th mat-header-cell *matHeaderCellDef> RemainingQuantity </th>
+                                    <td nowrap mat-cell *matCellDef="let element;let index = index"
+                                        style="width:90px!important;">
+                                        <span class="bmd-form-group">
+                                            <div class="input-group no-border">
+                                                <input matInput type="number" style="width:50%!important;"
+                                                    [formControl]="getControl(index, 'approveQuantity')" min="1">
+                                                <button mat-raised-button type="button"
+                                                    (click)="onCreateApproveQuantity(element)"
+                                                    *ngIf="checkPermission('BTN_REFRESH',null)"
+                                                    class="btn btn-white btn-round btn-just-icon">
+                                                    <i class="material-icons">sync</i>
+                                                    <div class="ripple-container"></div>
+                                                </button>
+                                                <mat-error *ngIf="getControl(index, 'approveQuantity').hasError('max')">
+                                                    Quantity <strong>max</strong>
+                                                </mat-error>
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="btn">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <button type="button" mat-raised-button class="btn btn-warning"
+                                            data-toggle="modal" *ngIf="checkPermission('BTN_NEW')" (click)="newItem()"
+                                            data-target="#newItem">New</button>
+                                    </th>
+                                    <td nowrap mat-cell *matCellDef="let element;let index = index">
+                                        <a class="btn btn-link btn-danger btn-just-icon remove"
+                                            *ngIf="checkPermission('BTN_DELETE')" (click)="onDelete(index,element)"><i
+                                                class="material-icons">close</i></a>
+
+                                        <a class="btn btn-link btn-danger btn-just-icon remove"
+                                            *ngIf="checkPermission('BTN_MESSAGE',element)"
+                                            (click)="onComment(index,element)"><i class="material-icons">message</i></a>
+
+                                            <button mat-raised-button type="button"
+                                            (click)="onHistory(element)"
+                                            *ngIf="checkPermission('BTN_HISTORY',null)"
+                                            class="btn btn-white btn-round btn-just-icon">
+                                            <i class="material-icons">history</i>
+                                            <div class="ripple-container"></div>
+                                        </button>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="newItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <form [formGroup]="addItemFrm">
+            <div class="modal-dialog">
+                <div class="modal-content order-model">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">New Purchase Item</h5>
+                        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group bmd-form-group is-filled">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                <mat-form-field class="example-full-width">
+                                    <input type="text" matInput formControlName="storePartNumber" aria-label="State"
+                                        placeholder="Search by Stock Code / Barcode / Description" [matAutocomplete]="auto" />
+                                        <mat-icon matSuffix>search</mat-icon>
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                        (optionSelected)="itemSelected($event.option.value)">
+                                        <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                        <ng-container *ngIf="!isLoading">
+                                            <mat-option *ngFor="let item of et_fields"
+                                                [value]="item.storePartNumber">
+                                                <span> Stock Code:{{ item.storePartNumber }} / Barcode:{{ item.barcode }} / Description:{{ item.itemDescription }} </span>
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                   
+                                </mat-form-field>
+                                </div>
+                               
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+
+                                        <input matInput placeholder="Store Part Number" 
+                                            formControlName="storePartNumber">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+
+                                        <input matInput placeholder="Barcode" (change)="onBarcode($event)"
+                                            formControlName="barcode">
+                                    </mat-form-field>
+                                </div>
+                            <div class="col-sm-2">
+                                <mat-form-field>
+                                    <input matInput placeholder="Unit" formControlName="unit">
+                                </mat-form-field>
+                            </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Description" formControlName="description">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                    <mat-form-field class="example-full-width">
+                                        <input type="number" matInput placeholder="Quantity" min="1"
+                                            formControlName="quantity" (change)="onCalculatorModal()">
+                                        <mat-error *ngIf="addItemFrm.controls['quantity'].errors?.min">
+                                            Mininum value 1
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                    <mat-form-field class="example-full-width">
+
+                                        <input matInput placeholder="Unit Price" type="text" min="0" currencyMask
+                                            [options]="{ prefix: ' ', thousands: ',', decimal: '.' }"
+                                            formControlName="unitPrice"
+                                            (blur)="onCalculatorModal()"
+                                            (change)="onCalculatorModal()">
+                                        <span matPrefix>R&nbsp;</span>
+                                        <mat-error *ngIf="addItemFrm.controls['unitPrice'].errors?.min">
+                                            Mininum value 1
+                                        </mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Tax Percent" type="number" min="0" max="100"
+                                            formControlName="taxPercent" (change)="onCalculatorModal()">
+                                        <span matPrefix>%&nbsp;</span>
+                                        <mat-error *ngIf="addItemFrm.controls['taxPercent'].errors?.max">
+                                            Maximum 100 %
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Tax Total" formControlName="taxTotal" type="text"
+                                            min="0" (change)="onCalculatorModal()" currencyMask
+                                            [options]="{ prefix: ' ', thousands: ',', decimal: '.' }">
+                                        <span matPrefix>R&nbsp;</span>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Discount Percent" type="number" maxlength="3"
+                                            max="100" formControlName="discountPercent" (change)="onCalculatorModal()">
+                                        <span matPrefix>%&nbsp;</span>
+                                        <mat-error *ngIf="addItemFrm.controls['discountPercent'].errors?.max">
+                                            Maximum 100 %
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-10 col-lg-6 ml-auto mr-auto">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Total" type="text" formControlName="total"
+                                            currencyMask [options]="{ prefix: ' ', thousands: ',', decimal: '.' }">
+                                        <span matPrefix>R &nbsp;</span>
+
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button mat-raised-button class="btn btn-danger" (click)="onAdd()">Add</button>
+
+                        <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                            data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="commentItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Comments</h5>
+                    <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-10 col-lg-12 ml-auto mr-auto">
+                            <table mat-table [dataSource]="orderItemMessages" matSort>
+                                <ng-container matColumnDef="message">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div class="card card-stats">
+
+                                            <div class="card-body">
+                                                {{element.message}}
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">date_range</i>
+                                                    Author:{{element.fullName}}
+                                                    {{element.createDate || 'dd:MMM:yyyy hh-mm-ss z' }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsMessage"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsMessage;"></tr>
+                            </table>
+                            <mat-paginator [length]="totalElement" [pageSize]="pageSizeMessage"
+                                [pageSizeOptions]="[5, 10, 15]" (page)="serverdata($event)">
+                            </mat-paginator>
+
+                        </div>
+                    </div>
+                    <form [formGroup]="commentForm">
+                        <div class="row">
+                            <div class="col-md-10 col-lg-12 ml-auto mr-auto">
+                                <mat-form-field class="example-full-width">
+                                    <textarea type="input" matInput placeholder="Message" formControlName="message"
+                                        (change)="onCalculatorModal()"> </textarea>
+                                    <mat-error *ngIf="addItemFrm.controls['quantity'].errors?.required">
+                                        Please enter the message
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button mat-raised-button type="button" (click)="sendMessage()" class="btn btn-danger btn-link">Send
+                        Message</button>
+                    <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                        data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="historyPartial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Partial History</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-10 col-lg-12 ml-auto mr-auto">
+                        <table mat-table [dataSource]="orderItemDetailListItemProjection">
+                            <ng-container matColumnDef="createdUser">
+                                <mat-header-cell *matHeaderCellDef>Created User</mat-header-cell>
+                                <mat-cell nowrap  *matCellDef="let element">
+                                            {{element.createdUser}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="createdDate">
+                                <mat-header-cell *matHeaderCellDef>Created Date</mat-header-cell>
+                                <mat-cell  nowrap *matCellDef="let element">
+                                            {{element.createdDate}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="quantity">
+                                <mat-header-cell nowrap *matHeaderCellDef>Quantity</mat-header-cell>
+                                <mat-cell nowrap *matCellDef="let element">
+                                            {{element.quantity}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                            {{element.description}}
+                                </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumnsHistory"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsHistory;"></mat-row>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

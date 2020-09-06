@@ -1,0 +1,28 @@
+h1{
+text-align: center;
+}
+table {
+width: 100%;
+}
+.mat-headline {
+width: 50%!important;
+}
+
+tr.mat-footer-row {
+font-weight: bold;
+}
+
+.mat-table-sticky {
+border-top: 1px solid #e0e0e0;
+}
+
+.order-model {
+width: 150%!important;
+}
+.mat-cell .flex-stretch {
+   background-color: #e0e0e0!important;
+}
+.crouselImage {
+   height: 350px!important;
+
+}

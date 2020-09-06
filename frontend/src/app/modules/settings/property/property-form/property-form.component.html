@@ -1,0 +1,47 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <form [formGroup]="propertyForm" class="form-horizontal">
+      <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-rose card-header-icon">
+                    <h4 class="card-title">Enter New Property</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Group Name" formControlName="groupName" maxlength="20">
+                              <app-field-error-display [displayError]="propertyForm.value?.groupName?.length===20"
+                                errorMsg="Max 20 characters">
+                              </app-field-error-display>
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Key Label" formControlName="keyLabel" maxlength="50">
+                              <app-field-error-display [displayError]="propertyForm.value?.keyLabel?.length===50"
+                                errorMsg="Max 50 characters">
+                              </app-field-error-display>
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Key Value" formControlName="keyValue" maxlength="50">
+                              <app-field-error-display [displayError]="propertyForm.value?.keyValue?.length===50"
+                                errorMsg="Max 50 characters">
+                              </app-field-error-display>
+                            </mat-form-field>
+                          </div>
+                          
+                    </div>
+                </div>
+                <div class="card-footer text-left">
+                    <button type="button" mat-raised-button class="btn" [disabled]="operationLock"
+                        (click)="onBack()">Back</button>
+                    <button type="button" mat-raised-button id="button" type="submit" class="btn btn-rose"
+                        [disabled]="operationLock" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

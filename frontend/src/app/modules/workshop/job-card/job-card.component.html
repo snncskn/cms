@@ -1,0 +1,663 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <form [formGroup]="form" class="form-horizontal">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-rose card-header-icon">
+              <div class="card-icon" style="cursor: pointer;">
+                <i class="material-icons" (click)="onBack()">arrow_back</i>
+              </div>
+              <h4 class="card-title">Job Card</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Request Number" formControlName="requestNumber">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <input matInput formControlName="jobCardStartDate" placeholder="Open Date/Time">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Fleet Number" formControlName="fleetNumber">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <input matInput formControlName="jobCardEndDate" placeholder="Closed Date/Time">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="KM/HOUR" formControlName="kmHour">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Operator" formControlName="operatorUser">
+                      <mat-option *ngFor="let item of operatorList" [value]="item.uuid">
+                        {{ item.fullName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Current KM/HOUR" formControlName="currentMachineHours">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Mechanic Name" formControlName="mechanicUser">
+                      <mat-option *ngFor="let item of mechanicList" [value]="item.uuid">
+                        {{ item.fullName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Machine Type Name" formControlName="vehicleTypeName">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Workshop Foreman/Manager" formControlName="foremanUser">
+                      <mat-option *ngFor="let item of foremanList" [value]="item.uuid">
+                        {{ item.fullName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+                </div>
+
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Status" formControlName="jobCardStatus">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-sm-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Description" formControlName="description">
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="row">
+
+
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-4">
+                  <mat-checkbox formControlName="riskAssessment">
+                    Risk Assessment Completed and asistant informed
+                  </mat-checkbox>
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+
+                <div class="col-sm-2">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-4">
+                  <mat-checkbox formControlName="lockOutProcedure">
+                    Lock Out Procedure Done Correctly
+                  </mat-checkbox>
+                </div>
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-2">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger card-header-icon">
+              <div class="card-icon" style="cursor: pointer;">
+                <i class="material-icons" data-toggle="modal" (click)="newDesc()" data-target="#desc">playlist_add</i>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="toolbar"></div>
+              <div class="material-datatables">
+                <mat-table [dataSource]="dataSource" matSort #sortSubs="matSort">
+                  <ng-container matColumnDef="createdAt">
+                    <mat-header-cell style="max-width: 18%!important; " *matHeaderCellDef>Date </mat-header-cell>
+                    <mat-cell style="max-width: 18%!important" *matCellDef="let row"> {{row.createdAt}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="description">
+                    <mat-header-cell style="max-width: 60%!important; " *matHeaderCellDef>Description </mat-header-cell>
+                    <mat-cell style="max-width: 60%!important; " *matCellDef="let row"> {{row.description}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="creator">
+                    <mat-header-cell style="max-width: 20%!important; " *matHeaderCellDef>User </mat-header-cell>
+                    <mat-cell style="max-width: 20%!important; " *matCellDef="let row"> {{row.createdBy}} </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <mat-paginator [length]="totalElementDesc" [pageSize]="pageSizeDesc" [pageSizeOptions]="pageSizeOptions"
+                  (page)="serverDataDesc($event)"></mat-paginator>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger card-header-icon">
+              <div class="card-icon" style="cursor: pointer;">
+                <i class="material-icons" data-toggle="modal" (click)="newItem()" data-target="#item">playlist_add</i>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="toolbar">
+              </div>
+              <div class="material-datatables">
+                <mat-table [dataSource]="jobdataSource" matSort #sortSubs="matSort">
+                  <ng-container matColumnDef="requestDate">
+                    <mat-header-cell *matHeaderCellDef>Request Date </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.requestDate}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="deliveryTime">
+                    <mat-header-cell *matHeaderCellDef>Delivery Time </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.deliveredDate}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="deliveredBy">
+                    <mat-header-cell *matHeaderCellDef>Delvered By </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.deliveredUser}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="receivedBy">
+                    <mat-header-cell *matHeaderCellDef>Revceived By</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.receivedUserInfo}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="partNumber">
+                    <mat-header-cell *matHeaderCellDef>Part Number</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> 
+                        <div class="row" (click)="itemDetail(row.itemInfo)">
+                            <div class="col-sm-12"  matTooltip="Please click detail information">
+                                {{row.itemInfo.storePartNumber}}
+                            </div>
+                        </div>
+                         </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef>Desc </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+
+                      <div class="row" (click)="itemDetail(row.itemInfo)">
+                          <div class="col-sm-12"  matTooltip="Please click detail information">
+                              <mat-icon matSuffix>info</mat-icon>
+                                          {{row.description}}
+                          </div>
+                      </div>
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef>Status </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <i class="material-icons" *ngIf="row.jobCardItemStatus === 'Requested'" style="color:red">
+                        brightness_1
+                      </i>
+                      <i class="material-icons" *ngIf="row.jobCardItemStatus === 'Partial'" style="color:orange">
+                        brightness_1
+                      </i>
+                      <i class="material-icons" *ngIf="row.jobCardItemStatus === 'Delivered'" style="color:green">
+                        brightness_1
+                      </i>
+                      {{row.jobCardItemStatus}}
+
+                    </mat-cell>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="currentQuantity">
+                    <mat-header-cell *matHeaderCellDef>Current Quantity</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.availableQuantity}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="availableQty">
+                    <mat-header-cell *matHeaderCellDef>Available on Request Quantity</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.approveQuantity}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Qty">
+                    <mat-header-cell *matHeaderCellDef>Requested Qty </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.quantity}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="btn">
+                    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <button type="button" mat-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon> Functions
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button type="button" (click)="deliverDetail(row)" mat-menu-item data-target="#deliverDetail">
+                          Deliver Detail
+                        </button>
+                        <button type="button" *ngIf="row.jobCardItemStatus === 'Requested'" mat-menu-item
+                          (click)="deleteDeliver(row)">
+                          Delete
+                        </button>
+
+
+                      </mat-menu>
+
+
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="requestUser">
+                    <mat-header-cell *matHeaderCellDef>Request User </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.requestUserInfo?.fullName}} </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="jobDisplayedColumns"></mat-header-row>
+                  <mat-row matRipple class="element-row" *matRowDef="let row; columns: jobDisplayedColumns;"></mat-row>
+                </mat-table>
+                <mat-paginator [length]="totalElement" [pageSize]="pageSize" [pageSizeOptions]="[5,10,15, 20, 100, 150]"
+                  (page)="serverDataItem($event)">
+                </mat-paginator>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-2">
+              </div>
+              <div class="col-sm-2">
+                <mat-checkbox formControlName="wheelNuts">
+                  Whell nuts
+                </mat-checkbox>
+              </div>
+              <div class="col-sm-2">
+                <mat-checkbox formControlName="machineGrease">
+                  Machine grease
+                </mat-checkbox>
+              </div>
+              <div class="col-sm-2">
+                <mat-checkbox formControlName="oilLevel">
+                  Oil Level/Oil Leaks
+                </mat-checkbox>
+              </div>
+              <div class="col-sm-2">
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <button mat-raised-button class="btn btn-danger" (click)="onUpdateJob()">Update Job Card</button>
+            <button mat-raised-button class="btn btn-warning" (click)="onCloseJob()">Close Job Card</button>
+          </div>
+
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="desc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <form [formGroup]="formJobDesc">
+    <div class="modal-dialog">
+      <div class="modal-content order-model">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Description</h5>
+          <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+
+        <div class="col-sm-12">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Description" formControlName="description"> </textarea>
+            <app-field-error-display [displayError]="formJobDesc.controls['description'].errors?.required"
+              errorMsg="Required field">
+            </app-field-error-display>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-raised-button class="btn btn-danger" (click)="onDescription()">Save</button>
+          <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal fade" id="item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <form [formGroup]="itemForm">
+    <div class="modal-dialog">
+      <div class="modal-content order-model">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Select Job Card Item</h5>
+          <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input type="text" matInput formControlName="storePartNumber" aria-label="State"
+                  placeholder="Search by Stock Code / Barcode / Description" [matAutocomplete]="auto" />
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                  (optionSelected)="itemSelected($event.option.value)">
+                  <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                  <ng-container *ngIf="!isLoading">
+                    <mat-option *ngFor="let item of et_fields" [value]="item.storePartNumber">
+                      <span> Stock Code:{{ item.storePartNumber }} / Barcode:{{ item.barcode }} /
+                        Description:{{ item.itemDescription }} </span>
+                    </mat-option>
+                  </ng-container>
+                </mat-autocomplete>
+
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-form-field class="example-full-width">
+
+                <input matInput placeholder="Store Part Number" formControlName="storePartNumberContent">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-form-field class="example-full-width">
+
+                <input matInput placeholder="Barcode" formControlName="barcode">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <mat-form-field>
+                <input matInput placeholder="Unit" formControlName="unit">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Description" formControlName="description">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input type="number" matInput placeholder="Qty" min="1" formControlName="quantity">
+                <app-field-error-display [displayError]="itemForm.controls['quantity'].errors?.required"
+                  errorMsg="Required field">
+                </app-field-error-display>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <!--
+        <div class="col-sm-12">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Description" formControlName="desc"> </textarea>
+            <app-field-error-display [displayError]="itemForm.controls['desc'].errors?.required"
+              errorMsg="Required field">
+            </app-field-error-display>
+          </mat-form-field>
+        </div>-->
+
+        <div class="modal-footer">
+          <button mat-raised-button class="btn btn-danger" (click)="onAddItem()">Add</button>
+          <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal fade" id="deliverDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <form [formGroup]="deliverfrm">
+    <div class="modal-dialog">
+      <div class="modal-content order-model">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Delivery Details</h5>
+          <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-sm-6">
+              <mat-form-field>
+                <input matInput placeholder="Stock Code" formControlName="stockCode">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field>
+                <input matInput placeholder="Barcode Code" formControlName="barcode">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <input matInput placeholder="Description" formControlName="description">
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Requested Qty" formControlName="requestedQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Delivered Qty" formControlName="deliveredQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Remaining Qty" formControlName="remainingQuantity">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="material-datatables">
+            <mat-table [dataSource]="dataSourceDeliveredInfos" matSort #sortSubs="matSort">
+              <ng-container matColumnDef="deliveredDate">
+                <mat-header-cell *matHeaderCellDef>Delivery Date
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.deliveredDate}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="deliveredBy">
+                <mat-header-cell *matHeaderCellDef>Delivered By</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.deliveredUserInfo?.fullName}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="receiveBy">
+                <mat-header-cell *matHeaderCellDef>Recived By
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.receivedUserInfo?.fullName}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="quantity">
+                <mat-header-cell *matHeaderCellDef>Delivered Qty
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.deliveredQuantity}} </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsDetail"></mat-header-row>
+              <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumnsDetail;"></mat-row>
+            </mat-table>
+            <mat-paginator [length]="totalElementDeliver" [pageSize]="pageSizeDeliver" [pageSizeOptions]="[5]"
+              (page)="serverDataDeliver($event)">
+            </mat-paginator>
+
+          </div>
+        </div>
+
+
+        <div class="modal-footer">
+          <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+
+
+<div class="modal fade" id="selecteditemDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content order-model">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Item Details</h5>
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="avatars.length>0">
+        <form [formGroup]="itemFormSelected">
+
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field>
+                <input matInput placeholder="Store Part Number" formControlName="storePartNumber">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field>
+                <input matInput placeholder="Barcode Code" formControlName="barcode">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-8">
+              <mat-form-field>
+                <input matInput placeholder="Description" formControlName="itemDescription">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Unit" formControlName="unit">
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Current Quantity" formControlName="currentQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Minimum Stock Quantity" formControlName="minStockQuantity">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field>
+                <input matInput placeholder="Price" formControlName="price">
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+        <ngx-hm-carousel [(ngModel)]="currentIndex" [show-num]="1" [autoplay-speed]="speed" [infinite]="infinite"
+        [drag-many]="true" [aniTime]="200" [data]="avatars" class="carousel c-accent">
+
+        <section ngx-hm-carousel-container class="content">
+          <article class="item cursor-pointer" ngx-hm-carousel-item *ngFor="let avatar of avatars; let i = index"
+            [ngClass]="{'visible': currentIndex===i}">
+            <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+
+            </div>
+          </article>
+          <ng-template #infiniteContainer></ng-template>
+        </section>
+        <ng-template #carouselContent let-avatar let-i="index">
+          <article class="item cursor-pointer" [ngClass]="{'visible': currentIndex===i}">
+            <div class="img" [style.backgroundImage]="'url('+avatar.downloadUrl+')'">
+
+            </div>
+          </article>
+        </ng-template>
+
+        <ng-template #carouselPrev>
+          <div class="click-area">
+            <i class="material-icons" style="background-color: black!important">keyboard_arrow_left</i>
+          </div>
+        </ng-template>
+        <ng-template #carouselNext>
+          <div class="click-area">
+            <i class="material-icons" style="background-color: black!important">keyboard_arrow_right</i>
+          </div>
+        </ng-template>
+
+        <ng-template #carouselDot let-model>
+          <div class="ball bg-accent" [class.visible]="model.index === model.currentIndex">
+          </div>
+        </ng-template>
+
+        <ng-template #carouselProgress let-progress>
+          <div class="progress"></div>
+
+        </ng-template>
+
+      </ngx-hm-carousel>
+      </div>
+
+
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>

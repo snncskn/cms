@@ -1,0 +1,84 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <form [formGroup]="form" class="form-horizontal">
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <button mat-raised-button class="btn" (click)="onBack()">Back</button>
+                </div>
+                <div class="col-sm-6" style="text-align: right!important">
+                  <button mat-raised-button class="btn btn-danger" (click)="pdf()">
+                    <mat-icon>cloud_download</mat-icon>Pdf
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card" id="contentToConvert">
+            <h2 style="font-family: Georgia, Times New Roman, Times, serif;text-align:center;">{{title}}
+            </h2>
+            <div class="card-body" style="text-align: center!important;">
+              <table align="center" border="1" style="width: 80%;">
+                <tr>
+                  <td class="trial one" style="text-align:right;width: 30%;">SITE :</td>
+                  <td style="text-align:left;width: 30%;">{{user?.currentSite?.description}}</td>
+                  <td nowrap class="trial one" style="text-align:right;width: 10%!important;" >OPERATOR NAME</td>
+                  <td style="text-align:left;width: 30%;">{{jobCardInfo?.operatorUser?.fullName}}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:right;width: 30%;" class="trial one">SMR : </td>
+                  <td style="text-align:left;width: 30%;">{{jobCardInfo.requestNumber}}</td>
+                  <td  nowrap class="trial one"   style="text-align:right;width: 10%!important;">BREAK DOWN DATE :</td>
+                  <td style="text-align:left;width: 30%;"> {{jobCardInfo.jobCardStartDate | date : 'shortDate' }}</td>
+                </tr><tr>
+                <td style="text-align:right;width: 30%;" class="trial one">PLANT NUMBER : </td>
+                <td style="text-align:left;width: 30%;">{{jobCardInfo.requestNumber}}</td>
+                <td nowrap class="trial one" style="text-align:right;width: 10%!important;">BREAK DOWN TIME:</td>
+                <td style="text-align:left;width: 30%;">{{jobCardInfo.jobCardStartDate | date : 'mediumTime' }}</td>
+              </tr>
+                <tr>
+                  <td style="text-align:right;width: 30%;" class="trial one">VEHICLE TYPE: </td>
+                  <td colspan="3" style="text-align:left;">{{jobCardInfo.vehicleTypeName}}</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;text-align: left;">BREAKDOWN DESCRIPTION : </td>
+                  <td colspan="3" style="text-align: left;height: 300px;vertical-align: top;text-align: left;" >{{jobCardInfo.description}}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;width: 20%!important">SUPERVISOR NAME : </td>
+                  <td style="text-align: left;width: 20%!important">{{jobCardInfo?.supervisorUser?.fullName}}</td>
+                  <td style="text-align: right;width: 20%!important">SIGNATURE :</td>
+                  <td colspan="2" style="width: 40%!important"></td>
+
+                </tr>
+                <tr>
+                  <td style="text-align: right;width: 20%!important">MECHANIC DUTY  :</td>
+                  <td style="text-align: left;width: 20%!important">{{jobCardInfo?.mechanicUser?.fullName}}</td>
+                  <td style="text-align: right;width: 20%!important">SIGNATURE :</td>
+                  <td colspan="2" style="width: 40%!important"></td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: right;width: 20%!important">TIME RECEIVED  :</td>
+                  <td nowrap colspan="3" style="text-align: left;width: 100%!important"></td>
+
+                </tr>
+
+
+              </table>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,166 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <form [formGroup]="userForm" class="form-horizontal">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header card-header-rose card-header-icon">
+              <h4 class="card-title">Enter New User Information </h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Site" [formControl]="siteInfos" multiple>
+                      <mat-select-trigger>
+                        {{siteDesc()}}
+                      </mat-select-trigger>
+                      <mat-option *ngFor="let item of dataSourceSite.data" [value]="item.uuid">
+                        {{ item.description }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Company Number" formControlName="staffNumber">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="First Name *" formControlName="firstName">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Last Name *" formControlName="lastName">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-8">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="expireDate" formControlName="expireDate"
+                      placeholder="Expire Date *" (click)="expireDate.open()">
+                    <mat-datepicker-toggle matSuffix [for]="expireDate"></mat-datepicker-toggle>
+                    <mat-datepicker #expireDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-8">
+                  <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Position" formControlName="position">
+                      <mat-option *ngFor="let item of propertys" [value]="item.keyLabel">
+                        {{ item.keyValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-8">
+                  <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Role" [formControl]="roleInfos" multiple>
+                      <mat-select-trigger>
+                        {{roleDesc()}}
+                      </mat-select-trigger>
+                      <mat-option *ngFor="let item of dataSourceRole.data" [value]="item.uuid">
+                        {{ item.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-footer text-left">
+                <button mat-raised-button class="btn" [disabled]="operationLock" (click)="onBack()">Back</button>
+                <button mat-raised-button type="submit" class="btn btn-rose" [disabled]="operationLock"
+                  (click)="onSubmit()">Save</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                    <div class="fileinput-new thumbnail">
+                      <img src="{{image?.downloadUrl}}" height="140" width="100"
+                        onerror="this.onerror=null; this.src='./assets/img/placeholder.jpg'">
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                    <div>
+                      <span class="btn btn-round btn-rose btn-file">
+                        <span class="fileinput-new" [class.disabled]="operationLock">Add Photo</span>
+                        <span class="fileinput-exists" [class.disabled]="operationLock">Change</span>
+                        <input type="file" name="fileImage" #fileImage (change)="onFileChanged($event)" #fileInput
+                          [disabled]="operationLock" />
+                      </span>
+                      <br />
+                      <a href="#" class="btn btn-danger btn-round fileinput-exists" [class.disabled]="operationLock"
+                        data-dismiss="fileinput"><i class="fa fa-times"></i>Remove</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header card-header-rose card-header-icon">
+              <h4 class="card-title">Enter Contact Details</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-5">
+                  <mat-form-field class="example-full-width">
+                    <input matInput formControlName="contactNumber" placeholder="(00)-000-0000" mask="+00(00)-000-0000"
+                      dropSpecialCharacters='false'>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-5">
+                  <mat-form-field class="example-full-width">
+                    <input type="email" matInput placeholder="Email Address" formControlName="email">
+                    <mat-error
+                      *ngIf="userForm.controls['email'].errors?.email || userForm.controls['email'].errors?.required"
+                      style="color:darkred">
+                      <small>Mail is <strong>Invalid</strong></small>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+              <div class="card-header card-header-rose card-header-icon">
+                <h4 class="card-title">Update Login Details</h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <mat-form-field class="example-full-width">
+                      <input type="password" matInput placeholder="Password *"  formControlName="password">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-5">
+                    <mat-form-field class="example-full-width" >
+                      <input type="password" matInput placeholder="Password Again *"  formControlName="verifyPassword">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="card">
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

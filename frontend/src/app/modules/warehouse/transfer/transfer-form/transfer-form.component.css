@@ -1,0 +1,25 @@
+table {
+    width: 100%;
+}
+ 
+.REQUEST {
+    background: linear-gradient(60deg, #a73025, #eb5c50)!important;
+}
+.PARTIAL {
+    background: linear-gradient(60deg, #9a600a, #ff9800)!important;
+}
+.TRANSFER {
+    background: linear-gradient(60deg, #0973bb, #f7f2ec)!important;
+}
+.DELIVERED {
+    background: linear-gradient(60deg, #4b4d4e, #ceccc9)!important;
+
+}
+.REJECTED {
+    background: linear-gradient(60deg, #4b4d4e, #ceccc9)!important;
+
+}
+
+.order-model {
+    width: 130%!important;
+}

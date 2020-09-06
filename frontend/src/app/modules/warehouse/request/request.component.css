@@ -1,0 +1,11 @@
+.less {
+    max-height: 12px;
+  }
+  .zebra {
+    background-color: rgba(0, 0, 0, 0.05)!important;
+}
+
+
+.order-model {
+  width: 130%!important;
+}

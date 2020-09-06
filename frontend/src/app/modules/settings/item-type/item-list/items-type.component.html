@@ -1,0 +1,55 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <form [formGroup]="frmGroup" class="form-horizontal">
+
+        <div class="card">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon" style="cursor: pointer;">
+              <i class="material-icons"  (click)="onAdd()">playlist_add</i>
+            </div>
+            <h4 class="card-title">Item Type Definition</h4>
+          </div>
+          <div class="card-body">
+            <div class="toolbar">
+            </div>
+            <div class="material-datatables"  >
+              <mat-table [dataSource]="dataSource" >
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Item Type</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.name | uppercase}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="btn">
+                  <mat-header-cell  mat-header-cell *matHeaderCellDef>
+                    
+                    <mat-form-field class="example-full-width">
+                      <input matInput placeholder="Search"  #txtVal (keydown.enter)="applyFilter(txtVal.value)" formControlName="search">
+                    </mat-form-field>
+                    
+                  </mat-header-cell >
+                  <td mat-cell *matCellDef="let element"> <a class="btn btn-link btn-info btn-just-icon like"
+                                                             (click)="onEdit(element.uuid)"><i
+                          class="material-icons">edit</i></a>
+                    <a class="btn btn-link btn-danger btn-just-icon remove" (click)="onDelete(element.uuid)"><i
+                            class="material-icons">close</i></a> </td>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row matRipple class="element-row"
+                         *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+
+
+              <mat-paginator [length]="totalElement" [pageSize]="pageSize"     
+              [pageSizeOptions]="pageSizeOptions" 
+              (page)="getServerData($event)"> 
+              </mat-paginator> 
+
+            </div>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

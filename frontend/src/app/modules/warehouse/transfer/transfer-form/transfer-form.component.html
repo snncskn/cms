@@ -1,0 +1,305 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <form [formGroup]="form" class="form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header card-header-rose card-header-icon">
+                            <h4 class="card-title"> New Transfer </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Transfer Number" formControlName="transferNumber">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [matDatepicker]="transferDate" formControlName="transferDate"
+                                            placeholder="Transfer Request Time" (click)="transferDate.open()">
+                                        <mat-datepicker-toggle matSuffix [for]="transferDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #transferDate></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="status" placeholder="Status">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-footer">
+                            <button mat-raised-button class="btn" (click)="onBack()">Back</button>
+                            <button mat-raised-button class="btn btn-danger" *ngIf="checkPermission('BTN_REJECT','')"
+                                (click)="reject('REJECTED')">Reject</button>
+                            <button mat-raised-button class="btn btn-success" *ngIf="checkPermission('BTN_TRANSFER','')"
+                                (click)="approveDialog('WAITING_DELIVER')">
+                                <mat-icon>check</mat-icon> Transfer
+                            </button>
+                            <button mat-raised-button class="btn btn-success" *ngIf="checkPermission('BTN_DELIVER','')"
+                                (click)="approveDialog('DELIVER')">
+                                <mat-icon>check</mat-icon> Deliver
+                            </button>
+                            <button mat-raised-button class="btn btn-rose" [disabled]="operationLock"
+                                *ngIf="checkPermission('BTN_SAVE','')" (click)="onSubmit()">Save
+                                <mat-icon>navigate_next</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-select placeholder="Source Site" formControlName="sourceSite">
+                                            <mat-option *ngFor="let item of siteDataSource.data" [value]="item.uuid">
+                                                {{ item.description }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="example-full-width" style="margin-top: 10px!important;">
+                                        <i class="material-icons">keyboard_tab</i>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-select placeholder="Target Site" formControlName="targetSite">
+                                            <mat-option *ngFor="let item of siteDataSource.data" [value]="item.uuid">
+                                                {{ item.description }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <table mat-table [dataSource]="dataSourceOrderItem" matSort formArrayName="controls">
+                                <ng-container matColumnDef="itemUuid">
+                                    <th mat-header-cell *matHeaderCellDef style=" width: 20%!important;"> Stock Code /
+                                        Barcode / Description
+                                    </th>
+                                    <td mat-cell *matCellDef="let element;let index = index"
+                                        style=" width: 20%!important;">
+                                        <span class="input-group-text">
+                                            <i
+                                                style="font-size: 90%;">{{getControl(index, 'storePartNumber').value}}</i>
+                                            <mat-error
+                                                *ngIf="getControl(index, 'storePartNumber').hasError('required')">
+                                                Field is <strong>Required</strong>
+                                            </mat-error>
+                                        </span>
+                                        <span class="input-group-text">
+                                            <i style="font-size: 90%;">{{getControl(index, 'barcode').value}}</i>
+                                        </span>
+                                        <span class="input-group-text">
+                                            <i style="font-size: 90%;">{{getControl(index, 'description').value}}</i>
+                                        </span>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+
+                                </ng-container>
+                                <ng-container matColumnDef="quantity">
+                                    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                                    <td mat-cell *matCellDef="let element;let index = index"
+                                        style="width:90px!important;">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="number" min="0"
+                                                [formControl]="getControl(index, 'quantity')"
+                                                (change)="onCalculator(index)">
+                                            <mat-error *ngIf="getControl(index, 'quantity').hasError('required')">
+                                                Field is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+
+                                </ng-container>
+                                <ng-container matColumnDef="space1">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let element;let index = index"
+                                        style="width:90px!important;">
+
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+
+                                </ng-container>
+                                <ng-container matColumnDef="unit">
+                                    <th mat-header-cell *matHeaderCellDef> Unit</th>
+                                    <td mat-cell *matCellDef="let element;let index = index"
+                                        style="width:90px!important;">
+                                        <mat-form-field class="mat-headline">
+                                            <input matInput type="text" [formControl]="getControl(index, 'unit')">
+                                        </mat-form-field>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="space2">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let element;let index = index"
+                                        style="width:90px!important;">
+
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+
+                                </ng-container>
+                                <!--
+                                <ng-container matColumnDef="approveQuantity">
+                                    <th mat-header-cell *matHeaderCellDef> Approve Quantity </th>
+                                    <td nowrap mat-cell *matCellDef="let element;let index = index"
+                                        style="width:90px!important;">
+                                        <span class="bmd-form-group">
+                                            <div class="input-group no-border">
+                                                <input matInput type="number" style="width:50%!important;"
+                                                    [formControl]="getControl(index, 'approveQuantity')" min="1">
+                                                <button mat-raised-button type="button"
+                                                    (click)="onCreateApproveQuantity(element)"
+                                                    *ngIf="checkPermission('BTN_REFRESH')"
+                                                    class="btn btn-white btn-round btn-just-icon">
+                                                    <i class="material-icons">update</i>
+                                                    <div class="ripple-container"></div>
+                                                </button>
+                                                <mat-error *ngIf="getControl(index, 'approveQuantity').hasError('max')">
+                                                    Quantity <strong>max</strong>
+                                                </mat-error>
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+                                -->
+                                <ng-container matColumnDef="btn">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <button type="button" mat-raised-button class="btn btn-warning"
+                                            data-toggle="modal" *ngIf="checkPermission('BTN_NEW')" (click)="newItem()"
+                                            data-target="#newItem">New</button>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element;let index = index">
+                                        <a class="btn btn-link btn-danger btn-just-icon remove"
+                                            *ngIf="checkPermission('BTN_DELETE')" (click)="onDelete(index,element)"><i
+                                                class="material-icons">close</i></a>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="newItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <form [formGroup]="addItemFrm">
+            <div class="modal-dialog">
+                <div class="modal-content order-model">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Select New Item Transfer</h5>
+                        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group bmd-form-group is-filled">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input type="text" matInput formControlName="storePartNumber" aria-label="State"
+                                            placeholder="Search by Stock Code / Barcode / Description" [matAutocomplete]="auto" />
+                                            <mat-icon matSuffix>search</mat-icon>
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                            (optionSelected)="itemSelected($event.option.value)">
+                                            <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                            <ng-container *ngIf="!isLoading">
+                                                <mat-option *ngFor="let item of et_fields"
+                                                    [value]="item.storePartNumber">
+                                                    <span> Stock Code:{{ item.storePartNumber }} / Barcode:{{ item.barcode }} / Description:{{ item.itemDescription }} </span>
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-autocomplete>
+
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+
+                                        <input matInput placeholder="Store Part Number"
+                                            formControlName="storePartNumber1">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width">
+
+                                        <input matInput placeholder="Barcode" (change)="onBarcode($event)"
+                                            formControlName="barcode">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-2">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Unit" formControlName="unit">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Description" formControlName="description">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <mat-form-field class="example-full-width">
+                                        <input type="number" matInput placeholder="Quantity" min="1"
+                                            formControlName="quantity">
+                                        <mat-error *ngIf="addItemFrm.controls['quantity'].errors?.min">
+                                            Mininum value 1
+                                        </mat-error>
+                                           <mat-error *ngIf="addItemFrm.controls['quantity'].errors?.max">
+                                            Max Available Quantity 
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-4">
+                                        <mat-form-field class="example-full-width">
+                                            <input type="number" matInput placeholder="Available Quantity"  
+                                                formControlName="availableQuantity">
+                                           
+                                        </mat-form-field>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button mat-raised-button class="btn btn-danger" (click)="onAdd()">Add</button>
+
+                        <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                            data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

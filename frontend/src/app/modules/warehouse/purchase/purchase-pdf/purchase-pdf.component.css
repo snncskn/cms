@@ -1,0 +1,13 @@
+tbody{
+    height: auto;
+    min-height:500px;
+    width: 100%;
+}
+td {
+    height: 20px;
+  }
+  #footer
+  {
+      width: 90%; 
+      bottom: 20px;
+  } 

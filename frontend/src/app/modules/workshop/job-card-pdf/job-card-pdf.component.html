@@ -1,0 +1,137 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <form [formGroup]="form" class="form-horizontal">
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <button mat-raised-button class="btn" (click)="onBack()">Back</button>
+                </div>
+                <div class="col-sm-6" style="text-align: right!important">
+                  <button mat-raised-button class="btn btn-danger" (click)="pdf()">
+                    <mat-icon>cloud_download</mat-icon>Pdf
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="contentToConvert" class="col-md-12">
+          <div class="card">
+            <h2 style="font-family: Georgia, Times New Roman, Times, serif;text-align:center;">{{title}}
+            </h2>
+            <div class="card-body" style="text-align: center!important;">
+              <table align="center" border="1" style="width: 80%;">
+                <tr>
+                  <td class="trial one" style="text-align:right;width: 30%;">MACHINE HOURS :</td>
+                  <td style="text-align:left;width: 30%;">{{jobCardInfo.currentKmHour}}</td>
+                  <td nowrap class="trial one" style="text-align:right;width: 10%!important;" >START DATE :</td>
+                  <td style="text-align:left;width: 30%;">{{jobCardInfo.jobCardStartDate}}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:right;width: 30%;" class="trial one">FLEET NUMBER : </td>
+                  <td style="text-align:left;width: 30%;">{{jobCardInfo.fleetNumber}}</td>
+                  <td class="trial one"   style="text-align:right;width: 10%!important;">END DATE:</td>
+                  <td style="text-align:left;width: 30%;"> {{jobCardInfo.jobCardEndDate}}</td>
+                </tr><tr> 
+                  <td style="text-align:right;width: 30%;" class="trial one">BREAKDOWN REPORT NUMBER : </td>
+                  <td style="text-align:left;width: 30%;">{{jobCardInfo.requestNumber}}</td>
+                  <td class="trial one" style="text-align:right;width: 10%!important;">SITE :</td>
+                  <td style="text-align:left;width: 30%;">{{site.description}}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="margin-left:250px!important;text-align:left;">
+                    <mat-checkbox formControlName="riskAssessment">
+                      Risk Assessment Completed and asistant informed
+                    </mat-checkbox>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="margin-left:250px!important ;text-align:left;">
+                    <mat-checkbox formControlName="lockOutProcedure">
+                      Lock Out Procedure Done Correctly
+                    </mat-checkbox>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>SERVICE/BREAKDOWN DESCRIPTION : </td>
+                  <td colspan="3" style="text-align: left;" >{{jobCardInfo.description}}</td>
+                </tr>
+              </table>
+
+              <table align="center" border="1" style="width: 80%;">
+                <thead>
+                  <tr  style="height:60px!important;">
+                    <th>PARTS USED</th>
+                    <th>QUANTITY</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of jobCardInfoItem; let i = index">
+                    <td style="text-align: left;">{{item.itemInfo.itemDescription}}</td>
+                    <td style="text-align: left;">{{item.quantity}}</td>
+
+                  </tr>
+                  <tr *ngFor="let item of rows; let i = index">
+                    <td style="height:40px;"></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+              <table align="center" border="1" style="width: 80%;">
+                  <tr>
+                    <td colspan="5" style="text-align: left;">CHECKS</td>
+                  </tr>
+                  <tr>
+                      <td style="text-align: center;" colspan="5">
+                          <mat-checkbox style="margin-left: -35%;" formControlName="wheelNuts">
+                            Whele nuts
+                          </mat-checkbox>
+                      <mat-checkbox style="margin: 10%;" formControlName="machineGrease">
+                        Machine grease
+                      </mat-checkbox>
+                      <mat-checkbox formControlName="oilLevel">
+                        Oil Level/Oil Leaks
+                      </mat-checkbox>
+                    </td>
+                    
+                  </tr>
+
+                  <tr>
+                    <td style="text-align: left;width: 20%!important">MECHANIC NAME : </td>
+                    <td style="text-align: left;width: 20%!important">{{jobCardInfo.mechanicUser?.fullName}}</td>
+                    <td style="text-align: left;width: 20%!important">SIGNATURE :</td>
+                    <td colspan="2" style="width: 40%!important"></td>
+
+                  </tr>
+
+
+                  <tr>
+                    <td style="text-align: left;width: 20%!important">WORKSHOP FOREMAN / MANAGER :</td>
+                    <td style="text-align: left;width: 20%!important">{{jobCardInfo.foremanUser?.fullName}}</td>
+                    <td style="text-align: left;width: 20%!important">SIGNATURE :</td>
+                    <td colspan="2" style="width: 40%!important"></td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left;">OPERATOR NAME :</td>
+                    <td style="text-align: left;">{{jobCardInfo.operatorUser?.fullName}}</td>
+                    <td style="text-align: left;">SIGNATURE :</td>
+                    <td colspan="2" style="width: 40%!important"></td>
+                  </tr> 
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>

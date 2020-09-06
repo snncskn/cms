@@ -1,0 +1,271 @@
+<div class="main-content">
+  <div class="container-fluid" *ngIf="showPdfDiv">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-6">
+                <button mat-raised-button class="btn" (click)="onBack()">Back</button>
+              </div>
+              <div class="col-sm-6" style="text-align: right!important">
+                <button mat-raised-button class="btn btn-danger" (click)="pdf()">
+                  <mat-icon>cloud_download</mat-icon>Pdf
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="contentToConvert" class="col-md-12">
+        <div class="card">
+          <div class="card-body" *ngIf="showDiv">
+            <table align="center" style="width: 90%;" border="0">
+              <thead>
+                <tr>
+                  <td> </td>
+                  <td><br /></td>
+                </tr>
+                <tr>
+                  <td style="width: 50%;"> </td>
+                  <td
+                    style="width: 50%;font-family:Arial,serif;font-size:15.8px;font-weight:bold;font-style:normal;text-align: right;">
+                    <h3><b>
+                        {{title}}</b>
+                    </h3>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;" > <img src="{{image.downloadUrl}}" /> </td>
+                  <td align="right">
+                    <table border="0" style="width: 100%;height:200px!important;">
+                      <tr>
+                        <td style="width: 20%!important;"></td>
+                        <td nowrap
+                          style="text-align: right!important;width: 40%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                        <b>  PURCHASE REQUEST NUMBER:</b></td>
+                        <td nowrap
+                          style="text-align: left!important;width: 40%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: right;">
+                          {{order.requestNumber}}</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 20%!important;"></td>
+                        <td
+                          style="text-align: right!important;width: 40%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                          <b>  PURCHASE REQUEST DATE:</b></td>
+                        <td nowrap
+                          style="text-align: left!important;width: 40%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: right;">
+                            {{order.requestDate}}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td nowrap
+                          style="text-align: right!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                          <b>    ORDER NUMBER:</b></td>
+                        <td
+                          style="text-align: left!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: right;">
+                          {{order.orderNumber}}  
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td></td>
+                        <td nowrap
+                          style="text-align: right!important; width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                          <b>   ORDER DATE:</b></td>
+                        <td
+                          style="text-align: left!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: right;">
+                         {{order.orderCreationDate}}
+                        </td>
+                      </tr>
+
+
+                      <tr>
+                        <td style="width: 40%!important;"></td>
+                        <td
+                          style="text-align: right!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                          INVOICE NUMBER </td>
+                        <td nowrap
+                          style="text-align: left!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: right;">
+                          {{order.invoiceNumber}}  </td>
+                      </tr>
+
+                      <tr>
+                        <td style="width: 40%!important;"></td>
+                        <td
+                          style="text-align: right!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                          INVOICE DATE </td>
+                        <td nowrap
+                          style="text-align: left!important;width: 30%!important;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: right;">
+                          {{order.invoiceDate}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+              <tbody style="min-height: 500px!important;">
+                <tr>
+                  <td style="width: 50%;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                    FROM
+                  </td>
+                  <td style="width: 50%;font-family:Arial,serif;font-size:15.8px;font-style:normal;text-align: left;">
+                    TO</td>
+
+                </tr>
+                <tr>
+                  <td
+                    style="width: 50%;font-family:Arial,serif;font-size:15.8px;font-weight:bold;font-style:normal;text-align: left;">
+                    <h3><b>{{order.supplierInfo.name}}</b></h3>
+                  </td>
+                  <td
+                    style="width: 50%;font-family:Arial,serif;font-size:15.8px;font-weight:bold;font-style:normal;text-align: left;">
+                    <h3><b>{{mySupplier.name}} </b></h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="width: 50%;font-family:Arial,serif;font-size:15.8px;font-weight:bold;font-style:normal;text-align: left;">
+                    <table border="0" style="width: 100%;">
+                      <tr>
+                        <td style="width: 50%;">VAT NO:</td>
+                        <td style="width: 50%;">{{order.supplierInfo.taxNumber}}</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 50%;">POSTAL ADDRESS:</td>
+                        <td style="width: 50%;">PHYSICAL ADDRESS:</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 50%;">{{order.supplierInfo.address}}</td>
+                        <td style="width: 50%;">{{order.supplierInfo.address}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 50%;font-family:Arial,serif;font-size:15.8px; font-style:normal;text-align: left;">
+                    <table border="0" style="width: 100%;">
+                      <tr>
+                        <td style="width: 50%;">VAT NO:</td>
+                        <td style="width: 50%;">{{mySupplier?.taxNumber}}</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 50%;"><b>POSTAL ADDRESS:</b></td>
+                        <td style="width: 50%;"><b>PHYSICAL ADDRESS:</b></td>
+                      </tr>
+                      <tr>
+                        <td style="width: 50%;">{{mySupplier?.address}}</td>
+                        <td style="width: 50%;">{{mySupplier?.address}}</td>
+                      </tr>
+
+
+                    </table>
+                    
+                  </td>
+                </tr>
+                <tr valign="top" style="vertical-align:top!important">
+                  <td valign="top" colspan="2" valign="top" style="min-height:500px!important;">
+                    <table border="0"
+                      style="vertical-align:top!important;width: 100%;font-family:Arial,serif;font-size:16.8px;">
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+
+                        <td>Description</td>
+                        <td>Quantity</td>
+                        <td>Excl. Price </td>
+                        <td>Disc % </td>
+                        <td>VAT % </td>
+                        <td>Excl. Total </td>
+                        <td>Incl. Total </td>
+                      </tr>
+                      <tr *ngFor="let item of order?.orderItemInfos; let i = index">
+
+                        <td style="width: 40%!important;">{{item.itemInfo.storePartNumber}} - {{item.itemInfo.itemDescription}}</td>
+                        <td style="font-weight:bold!important;"><b>{{item.quantity.toFixed(4)}}</b></td>
+                        <td>{{item.unitPrice  | currency:"R "}} </td>
+                        <td>{{item.discountPercent.toFixed(2)}} % </td>
+                        <td>{{item.taxPercent.toFixed(2)}} % </td>
+                        <td>{{(item.unitPrice * item.quantity)  | currency:"R "}} </td>
+                        <td style="text-align: right!important;font-weight:bold!important;">
+                          <b>{{item.total+item.taxTotal  | currency:"R "}} </b></td>
+                      </tr>
+                      <tr *ngFor="let item of rows; let r = index">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+
+            <table id="footer" align="center" style="width: 90%;">
+              <tr>
+                <td style="width: 50%!important;padding-right:30px!important;padding-left:30px!important;">
+                  </td>
+                <td align="right" style="width: 50%!important;">
+                  <table border="0" valign="center" style="text-align: rigth;">
+                    <tr>
+                      <td colspan="2"><hr></td>
+                      
+                    </tr>
+                    <tr>
+                      <td style="text-align: left;">Total Discount:</td>
+                      <td style="text-align: right!important;">{{order.discountTotal | currency:"R " }}</td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left;">Total Exclusive:</td>
+                      <td style="text-align: right!important;">{{(order.grandTotal - order.taxTotal)  | currency:"R "}}</td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left;">Total VAT:</td>
+                      <td style="text-align: right!important;"><b>{{order.taxTotal  | currency:"R "}}</b></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left;">Sub Total:</td>
+                      <td nowrap style="text-align: right!important;">{{order.grandTotal  | currency:"R "}} </td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td style="text-align: right!important;"><b></b></td>
+                    </tr>
+                    <tr>
+                      <td>Grand Total:</td>
+                      <td style="text-align: right!important;"><b>{{order.grandTotal | currency:"R "}}</b></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td style="text-align: right!important;"><b>BALANCE DUE</b></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td style="text-align: right!important;">
+                        <h3><b>{{order.grandTotal | currency:"R "}}</b></h3>
+                      </td>
+                    </tr>
+
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

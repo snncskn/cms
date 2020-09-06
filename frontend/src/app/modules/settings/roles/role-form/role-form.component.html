@@ -1,0 +1,36 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <form (ngSubmit)="onSubmit()" [formGroup]="roleForm" class="form-horizontal">
+            <div class="card-header card-header-rose card-header-icon">
+              <h4 class="card-title">Enter New Role</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-5">
+                  <mat-form-field class="example-full-width"
+                                  [ngClass]="displayFieldCss(roleForm, 'name')">
+                    <input matInput placeholder="Role Name *"
+                           (ngModelChange)="textValidationType($event)"
+                           formControlName="name">
+                    <app-field-error-display [displayError]="isFieldValid(roleForm, 'name')"
+                                             errorMsg="Required text">
+                    </app-field-error-display>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <button mat-raised-button class="btn" [disabled]="operationLock" type="button" (click)="onBack()"
+                      class="btn btn-rose btn-fill">Back</button>
+              <button mat-raised-button type="submit" [disabled]="operationLock"   class="btn btn-rose btn-fill">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

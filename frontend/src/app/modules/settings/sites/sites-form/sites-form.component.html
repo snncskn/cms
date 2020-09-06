@@ -1,0 +1,47 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form (ngSubmit)="onSubmit()" [formGroup]="siteForm" class="form-horizontal">
+                        <div class="card-header card-header-rose card-header-icon">
+                            <h4 class="card-title">Enter New Site</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width"
+                                        [ngClass]="displayFieldCss(siteForm, 'description')">
+                                        <input matInput placeholder="Site Description *"
+                                            (ngModelChange)="textValidationType($event)" formControlName="description">
+                                        <app-field-error-display [displayError]="isFieldValid(siteForm, 'description')"
+                                            errorMsg="Required text">
+                                        </app-field-error-display>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-form-field class="example-full-width"
+                                        [ngClass]="displayFieldCss(siteForm, 'supplierUuid')">
+                                        <mat-select placeholder="Supplier" formControlName="supplierUuid">
+                                            <mat-option *ngFor="let item of supplierDataSource.data"
+                                                [value]="item.uuid">
+                                                {{ item.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button mat-raised-button class="btn" [disabled]="operationLock" type="button"
+                                (click)="onBack()" class="btn btn-rose btn-fill">Back</button>
+                            <button mat-raised-button type="submit" [disabled]="operationLock"
+                                class="btn btn-rose btn-fill">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

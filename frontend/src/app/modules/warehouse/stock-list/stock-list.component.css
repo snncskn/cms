@@ -1,0 +1,11 @@
+table {
+    width: 100%;
+}
+.crouselImage {
+    height: 350px!important;
+
+} 
+
+.zebra {
+    background-color: rgba(0, 0, 0, 0.05)!important;
+}
